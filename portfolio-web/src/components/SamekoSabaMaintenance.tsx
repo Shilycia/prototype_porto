@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Icon from "./Icon";
 
 interface SamekoSabaMaintenanceProps {
   onBypass?: () => void;
@@ -21,19 +22,44 @@ interface ClickRipple {
   y: number;
 }
 
-const DIALOGUES = [
-  "Awaawa~! Saba gak sengaja numpahin kopi ke kabel server... Kaniki lagi benerin! ☕💦",
-  "Kaniki Engineering lagi kencengin baut-baut Helipod Cloud! Dikit lagi ya~ 🦀🔧",
-  "Kalibrasi Mercusuar & Stasiun Pantai sedang berlangsung! Jangan sampai tersesat di ombak kabut~ 🚨🌊",
-  "Sambil nunggu server reboot, yuk kumpulin kerang laut bareng Saba! 🐚✨",
-  "Tenang Kaniki bros! Kita bakal berenang online lagi secepatnya! 🦈💙",
+interface DialogueItem {
+  text: string;
+  icon: string;
+  iconColor: string;
+}
+
+const DIALOGUES: DialogueItem[] = [
+  {
+    text: "Awaawa~! Saba gak sengaja numpahin kopi ke kabel server... Kaniki lagi benerin!",
+    icon: "local_cafe",
+    iconColor: "text-amber-400",
+  },
+  {
+    text: "Kaniki Engineering lagi kencengin baut-baut Helipod Cloud! Dikit lagi ya~",
+    icon: "build",
+    iconColor: "text-cyan-400",
+  },
+  {
+    text: "Kalibrasi Mercusuar & Stasiun Pantai sedang berlangsung! Jangan sampai tersesat di ombak kabut~",
+    icon: "waves",
+    iconColor: "text-sky-400",
+  },
+  {
+    text: "Sambil nunggu server reboot, yuk kumpulin kerang laut bareng Saba!",
+    icon: "auto_awesome",
+    iconColor: "text-yellow-300",
+  },
+  {
+    text: "Tenang Kaniki bros! Kita bakal berenang online lagi secepatnya!",
+    icon: "water",
+    iconColor: "text-cyan-400",
+  },
 ];
 
 export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanceProps) {
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [cheerCount, setCheerCount] = useState(42);
   const [floatingParticles, setFloatingParticles] = useState<{ id: number; src: string; x: number }[]>([]);
-  const [uptimeStr, setUptimeStr] = useState("00:00:00");
 
   // Custom Cursor & Parallax State
   const [cursorPos, setCursorPos] = useState({ x: -200, y: -200 });
@@ -54,19 +80,6 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
       setDialogueIndex((prev) => (prev + 1) % DIALOGUES.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Timer counter
-  useEffect(() => {
-    const start = Date.now();
-    const timer = setInterval(() => {
-      const diff = Math.floor((Date.now() - start) / 1000);
-      const hours = String(Math.floor(diff / 3600)).padStart(2, "0");
-      const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, "0");
-      const seconds = String(diff % 60).padStart(2, "0");
-      setUptimeStr(`${hours}:${minutes}:${seconds}`);
-    }, 1000);
-    return () => clearInterval(timer);
   }, []);
 
   // Custom Cursor and Parallax Controller
@@ -297,8 +310,8 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
 
           {/* Hover Sparkle Badge */}
           {isCursorHovered && (
-            <div className="absolute -top-2.5 -right-2 text-xs select-none animate-bounce">
-              ✨
+            <div className="absolute -top-3 -right-2 text-amber-300 select-none animate-bounce">
+              <Icon name="auto_awesome" size={14} fill />
             </div>
           )}
         </div>
@@ -531,8 +544,9 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             </div>
 
             {/* Click to Cheer Hint Badge */}
-            <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap bg-cyan-500/90 hover:bg-cyan-400 text-slate-950 font-extrabold text-[11px] px-3 py-0.5 rounded-full shadow-lg shadow-cyan-500/40 border border-cyan-200 transition">
-              ✨ Klik Saba untuk Semangat!
+            <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap bg-cyan-500/90 hover:bg-cyan-400 text-slate-950 font-extrabold text-[11px] px-3 py-0.5 rounded-full shadow-lg shadow-cyan-500/40 border border-cyan-200 transition flex items-center gap-1.5">
+              <Icon name="auto_awesome" size={13} fill className="text-slate-950" />
+              <span>Klik Saba untuk Semangat!</span>
             </div>
           </div>
 
@@ -540,7 +554,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
           <div 
             className="absolute -bottom-4 -right-6 sm:-right-10 flex flex-col items-center animate-crab-scuttle cursor-pointer"
             onClick={handleCheer}
-            title="Kaniki: Engineering on duty! 🦀🔧"
+            title="Kaniki: Engineering on duty!"
           >
             {/* Yellow Hardhat */}
             <div className="w-8 h-4 bg-yellow-400 rounded-t-full border border-yellow-600 shadow-md flex items-center justify-center -mb-1 z-10">
@@ -549,7 +563,9 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             {/* Custom Crab Sticker & Tools */}
             <div className="w-16 h-12 relative filter drop-shadow-md select-none flex items-center justify-center">
               <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain" />
-              <span className="absolute -top-1 -right-2 text-base">🔧</span>
+              <span className="absolute -top-1 -right-2 w-5 h-5 bg-slate-900/90 rounded-full border border-amber-400/50 shadow flex items-center justify-center">
+                <Icon name="build" size={12} className="text-amber-400" fill />
+              </span>
             </div>
             <span className="text-[10px] font-mono font-bold text-amber-300 bg-slate-900/90 px-1.5 py-0.5 rounded border border-amber-400/40 shadow mt-0.5">
               Kaniki
@@ -571,8 +587,14 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
               </span>
               <span className="text-[10px] text-slate-400 font-mono">(Klik untuk ganti)</span>
             </div>
-            <p className="text-base sm:text-lg font-medium text-slate-100 leading-relaxed transition-all">
-              &ldquo;{DIALOGUES[dialogueIndex]}&rdquo;
+            <p className="text-base sm:text-lg font-medium text-slate-100 leading-relaxed transition-all inline-flex items-center justify-center flex-wrap gap-2">
+              <span>&ldquo;{DIALOGUES[dialogueIndex].text}&rdquo;</span>
+              <Icon
+                name={DIALOGUES[dialogueIndex].icon}
+                size={20}
+                className={`${DIALOGUES[dialogueIndex].iconColor} inline-flex drop-shadow`}
+                fill
+              />
             </p>
           </div>
           {/* Bubble Pointer Tail */}
@@ -594,38 +616,6 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
           </p>
         </div>
 
-        {/* Progress Bar with Swimming Fish Sticker */}
-        <div className="w-full max-w-lg mb-8 bg-slate-900/70 p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-xl">
-          <div className="flex items-center justify-between text-xs font-mono text-slate-300 mb-2">
-            <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
-              <img src="/stickers/saba-boat.png" alt="Boat" className="w-4 h-3.5 object-contain inline-block" />
-              <span>Status Kalibrasi:</span>
-            </span>
-            <span className="text-cyan-400 font-bold">88% Selesai</span>
-          </div>
-
-          <div className="relative w-full h-4 bg-slate-800 rounded-full overflow-hidden border border-slate-700">
-            <div 
-              className="h-full bg-gradient-to-r from-cyan-500 via-sky-400 to-amber-300 rounded-full transition-all duration-500 relative"
-              style={{ width: "88%" }}
-            >
-              {/* Shimmer sweep */}
-              <div className="absolute inset-0 bg-white/20 animate-pulse" />
-            </div>
-            {/* Swimming Fish Sticker at 88% */}
-            <div 
-              className="absolute top-1/2 -translate-y-1/2 w-6 h-5 select-none transition-all duration-500 flex items-center justify-center"
-              style={{ left: "calc(88% - 12px)" }}
-            >
-              <img src="/stickers/saba-fish.png" alt="Saba Fish" className="w-full h-full object-contain" />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mt-2.5">
-            <span>Durasi Maintenance: <strong className="text-slate-200">{uptimeStr}</strong></span>
-            <span>Target: <strong className="text-cyan-300">Port 3000 Web</strong></span>
-          </div>
-        </div>
 
         {/* Interactive Cheer Button with Sound & Particles */}
         <div className="relative mb-10">
@@ -658,27 +648,37 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         {/* Server Details Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl text-left mb-8">
           <div className="bg-slate-900/60 backdrop-blur-md p-3.5 rounded-xl border border-slate-800">
-            <div className="text-[10px] uppercase font-mono text-slate-400">Infrastruktur Host</div>
-            <div className="text-xs font-semibold text-slate-200 mt-0.5">Helipod.io Cloud</div>
+            <div className="text-[10px] uppercase font-mono text-slate-400 flex items-center gap-1.5">
+              <Icon name="dns" size={14} className="text-cyan-400" />
+              <span>Infrastruktur Host</span>
+            </div>
+            <div className="text-xs font-semibold text-slate-200 mt-1">Helipod.io Cloud</div>
             <div className="text-[10px] text-cyan-400 font-mono">Ubuntu 24.04 LTS</div>
           </div>
 
           <div className="bg-slate-900/60 backdrop-blur-md p-3.5 rounded-xl border border-slate-800">
-            <div className="text-[10px] uppercase font-mono text-slate-400">Core REST API</div>
-            <div className="text-xs font-semibold text-slate-200 mt-0.5">PORT 3001 &bull; Active</div>
+            <div className="text-[10px] uppercase font-mono text-slate-400 flex items-center gap-1.5">
+              <Icon name="api" size={14} className="text-emerald-400" />
+              <span>Core REST API</span>
+            </div>
+            <div className="text-xs font-semibold text-slate-200 mt-1">PORT 3001 &bull; Active</div>
             <a 
               href="http://43.173.33.116:3001" 
               target="_blank" 
               rel="noreferrer"
-              className="text-[10px] text-cyan-400 hover:underline font-mono"
+              className="text-[10px] text-cyan-400 hover:underline font-mono inline-flex items-center gap-1"
             >
-              Periksa Endpoint &rarr;
+              <span>Periksa Endpoint</span>
+              <Icon name="arrow_forward" size={12} className="text-cyan-400" />
             </a>
           </div>
 
           <div className="bg-slate-900/60 backdrop-blur-md p-3.5 rounded-xl border border-slate-800">
-            <div className="text-[10px] uppercase font-mono text-slate-400">Pengembang Sistem</div>
-            <div className="text-xs font-semibold text-slate-200 mt-0.5">shilycia&apos;s DEV</div>
+            <div className="text-[10px] uppercase font-mono text-slate-400 flex items-center gap-1.5">
+              <Icon name="terminal" size={14} className="text-pink-400" />
+              <span>Pengembang Sistem</span>
+            </div>
+            <div className="text-xs font-semibold text-slate-200 mt-1">shilycia&apos;s DEV</div>
             <div className="text-[10px] text-pink-400 font-mono">Bintang Putra Adryan</div>
           </div>
         </div>
@@ -689,43 +689,48 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             href="https://wa.me/6282211516084"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-cyan-500/40 transition"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-cyan-500/40 transition"
           >
-            <span>💬</span> WhatsApp Kontak Darurat
+            <Icon name="chat" size={16} className="text-emerald-400" />
+            <span>WhatsApp Kontak Darurat</span>
           </a>
 
           <a
             href="https://github.com/Shilycia"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-cyan-500/40 transition"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-cyan-500/40 transition"
           >
-            <span>🐙</span> GitHub: @Shilycia
+            <Icon name="code" size={16} className="text-cyan-400" />
+            <span>GitHub: @Shilycia</span>
           </a>
 
           <a
             href="http://43.173.33.116"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-cyan-500/40 transition"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-cyan-500/40 transition"
           >
-            <span>🏠</span> Portal Utama (Port 80)
+            <Icon name="home" size={16} className="text-sky-400" />
+            <span>Portal Utama (Port 80)</span>
           </a>
 
           {/* Admin Bypass Link */}
           {onBypass ? (
             <button
               onClick={onBypass}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono text-slate-500 hover:text-slate-300 transition"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono text-slate-500 hover:text-slate-300 transition cursor-pointer"
             >
-              🔓 Admin Bypass Preview
+              <Icon name="lock_open" size={14} className="text-slate-400" />
+              <span>Admin Bypass Preview</span>
             </button>
           ) : (
             <Link
               href="/?bypass=true"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-mono text-slate-500 hover:text-slate-300 transition"
             >
-              🔓 Admin Bypass Preview
+              <Icon name="lock_open" size={14} className="text-slate-400" />
+              <span>Admin Bypass Preview</span>
             </Link>
           )}
         </div>
