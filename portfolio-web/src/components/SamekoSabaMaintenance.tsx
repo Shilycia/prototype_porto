@@ -18,7 +18,7 @@ const DIALOGUES = [
 export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanceProps) {
   const [dialogueIndex, setDialogueIndex] = useState(0);
   const [cheerCount, setCheerCount] = useState(42);
-  const [floatingParticles, setFloatingParticles] = useState<{ id: number; char: string; x: number }[]>([]);
+  const [floatingParticles, setFloatingParticles] = useState<{ id: number; src: string; x: number }[]>([]);
   const [uptimeStr, setUptimeStr] = useState("00:00:00");
 
   // Cycle Saba dialogues every 6 seconds
@@ -70,20 +70,24 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
     }
   };
 
-  // Handle Cheer click
+  // Handle Cheer click with sticker burst
   const handleCheer = () => {
     playCuteChime();
     setCheerCount((c) => c + 1);
 
-    const chars = ["🦀", "💙", "🫧", "✨", "☕", "🦈"];
-    const char = chars[Math.floor(Math.random() * chars.length)];
+    const stickers = [
+      "/stickers/saba-crab.png",
+      "/stickers/saba-fish.png",
+      "/stickers/saba-boat.png",
+    ];
+    const src = stickers[Math.floor(Math.random() * stickers.length)];
     const newParticle = {
       id: Date.now() + Math.random(),
-      char,
-      x: Math.random() * 60 - 30, // random spread around button
+      src,
+      x: Math.random() * 80 - 40,
     };
 
-    setFloatingParticles((prev) => [...prev.slice(-10), newParticle]);
+    setFloatingParticles((prev) => [...prev.slice(-12), newParticle]);
     setTimeout(() => {
       setFloatingParticles((prev) => prev.filter((p) => p.id !== newParticle.id));
     }, 1200);
@@ -112,6 +116,20 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         <div className="absolute top-20 left-10 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        {/* Ambient Floating Hand-drawn Stickers */}
+        <div className="absolute top-24 left-[8%] w-12 h-9 opacity-40 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "1s" }}>
+          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain" />
+        </div>
+        <div className="absolute bottom-32 left-[12%] w-11 h-8 opacity-35 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "2.5s" }}>
+          <img src="/stickers/saba-fish.png" alt="Blue Fish" className="w-full h-full object-contain" />
+        </div>
+        <div className="absolute top-1/3 right-[10%] w-12 h-9 opacity-35 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "1.8s" }}>
+          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain" />
+        </div>
+        <div className="absolute bottom-28 right-[14%] w-12 h-8 opacity-40 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "3.2s" }}>
+          <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain" />
+        </div>
 
         {/* Floating Ambient Bubbles */}
         {[...Array(14)].map((_, i) => (
@@ -144,8 +162,8 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
           ========================================= */}
       <header className="relative z-20 w-full max-w-6xl mx-auto px-6 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-cyan-500/30 border border-cyan-300/30">
-            🦈
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 flex items-center justify-center shadow-lg shadow-cyan-500/30 border border-cyan-300/30 p-1.5 backdrop-blur-md">
+            <img src="/stickers/saba-fish.png" alt="Sameko Saba Fish" className="w-full h-full object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -209,15 +227,15 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             title="Kaniki: Engineering on duty! 🦀🔧"
           >
             {/* Yellow Hardhat */}
-            <div className="w-8 h-4 bg-yellow-400 rounded-t-full border border-yellow-600 shadow-md flex items-center justify-center -mb-1">
+            <div className="w-8 h-4 bg-yellow-400 rounded-t-full border border-yellow-600 shadow-md flex items-center justify-center -mb-1 z-10">
               <span className="w-1.5 h-1.5 rounded-full bg-white shadow-xs" />
             </div>
-            {/* Crab Emoji & Tools */}
-            <div className="text-4xl filter drop-shadow-md select-none relative">
-              🦀
+            {/* Custom Crab Sticker & Tools */}
+            <div className="w-16 h-12 relative filter drop-shadow-md select-none flex items-center justify-center">
+              <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain" />
               <span className="absolute -top-1 -right-2 text-base">🔧</span>
             </div>
-            <span className="text-[10px] font-mono font-bold text-amber-300 bg-slate-900/90 px-1.5 py-0.5 rounded border border-amber-400/40 shadow">
+            <span className="text-[10px] font-mono font-bold text-amber-300 bg-slate-900/90 px-1.5 py-0.5 rounded border border-amber-400/40 shadow mt-0.5">
               Kaniki
             </span>
           </div>
@@ -231,8 +249,9 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         >
           <div className="relative bg-slate-900/85 backdrop-blur-xl border border-cyan-400/40 hover:border-cyan-300 px-6 py-4 rounded-2xl shadow-xl shadow-cyan-950/60 transition-all duration-300 group-hover:scale-[1.02]">
             <div className="flex items-center gap-2 mb-1.5 justify-center">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
-                <span>💬</span> Sameko Saba berkata:
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2">
+                <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-5 h-4 object-contain inline-block" />
+                <span>Sameko Saba berkata:</span>
               </span>
               <span className="text-[10px] text-slate-400 font-mono">(Klik untuk ganti)</span>
             </div>
@@ -263,7 +282,8 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         <div className="w-full max-w-lg mb-8 bg-slate-900/70 p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-xl">
           <div className="flex items-center justify-between text-xs font-mono text-slate-300 mb-2">
             <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
-              <span>🌊</span> Status Kalibrasi:
+              <img src="/stickers/saba-boat.png" alt="Boat" className="w-4 h-3.5 object-contain inline-block" />
+              <span>Status Kalibrasi:</span>
             </span>
             <span className="text-cyan-400 font-bold">88% Selesai</span>
           </div>
@@ -276,12 +296,12 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
               {/* Shimmer sweep */}
               <div className="absolute inset-0 bg-white/20 animate-pulse" />
             </div>
-            {/* Swimming Shark Fin at 88% */}
+            {/* Swimming Fish Sticker at 88% */}
             <div 
-              className="absolute top-1/2 -translate-y-1/2 text-sm select-none transition-all duration-500"
-              style={{ left: "calc(88% - 14px)" }}
+              className="absolute top-1/2 -translate-y-1/2 w-6 h-5 select-none transition-all duration-500 flex items-center justify-center"
+              style={{ left: "calc(88% - 12px)" }}
             >
-              🦈
+              <img src="/stickers/saba-fish.png" alt="Saba Fish" className="w-full h-full object-contain" />
             </div>
           </div>
 
@@ -297,24 +317,24 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             onClick={handleCheer}
             className="group relative inline-flex items-center gap-3 px-7 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-sm sm:text-base shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 hover:scale-105 active:scale-95 transition-all duration-200 cursor-pointer border border-cyan-200/50"
           >
-            <span className="text-xl group-hover:rotate-12 transition-transform">🦀</span>
+            <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-7 h-5 object-contain group-hover:rotate-12 transition-transform" />
             <span>Kirim Semangat ke Saba & Kaniki!</span>
             <span className="bg-slate-950/25 px-2 py-0.5 rounded-full text-xs font-mono text-slate-900">
               +{cheerCount}
             </span>
           </button>
 
-          {/* Floating particle burst */}
+          {/* Floating sticker particle burst */}
           {floatingParticles.map((p) => (
             <div
               key={p.id}
-              className="absolute left-1/2 -top-4 pointer-events-none text-2xl animate-fade-in-up font-bold"
+              className="absolute left-1/2 -top-6 pointer-events-none animate-fade-in-up"
               style={{
-                transform: `translateX(${p.x}px) translateY(-35px)`,
-                transition: "all 1s ease-out",
+                transform: `translateX(${p.x}px) translateY(-40px)`,
+                transition: "all 1.2s ease-out",
               }}
             >
-              {p.char}
+              <img src={p.src} alt="cheer sticker" className="w-8 h-8 object-contain drop-shadow-lg" />
             </div>
           ))}
         </div>
@@ -404,9 +424,15 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
           <span>&copy; 2026 Diyul Creative Portfolio &bull; Managed by shilycia&apos;s DEV</span>
         </div>
         <div className="flex items-center gap-3 font-mono text-[11px]">
-          <span>Lighthouse Keeper: Sameko Saba 🦈</span>
+          <span className="inline-flex items-center gap-1.5">
+            Lighthouse Keeper: Sameko Saba
+            <img src="/stickers/saba-fish.png" alt="Saba Fish" className="w-4 h-3 object-contain inline-block" />
+          </span>
           <span>&bull;</span>
-          <span>Crab Mascot: Kaniki 🦀</span>
+          <span className="inline-flex items-center gap-1.5">
+            Crab Mascot: Kaniki
+            <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-4.5 h-3.5 object-contain inline-block" />
+          </span>
         </div>
       </footer>
 
