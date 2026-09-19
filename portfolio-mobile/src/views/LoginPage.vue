@@ -10,15 +10,15 @@
           <div class="logo-circle">
             <ion-icon :icon="shieldCheckmarkOutline" class="logo-icon" />
           </div>
-          <h1 class="brand-title text-gradient">DIYUL ADMIN</h1>
-          <p class="brand-subtitle">Portfolio Content Management System</p>
-          <span class="badge-tag">MOBILE SUITE // V1.0</span>
+          <h1 class="brand-title text-gradient">shilycia's DEV</h1>
+          <p class="brand-subtitle">Portfolio Management Studio</p>
+          <span class="badge-tag">SECURE ACCESS // ADMIN CMS</span>
         </div>
 
         <!-- Login Form Card -->
         <div class="glass-panel form-card">
           <h2 class="form-title">Masuk ke Sistem</h2>
-          <p class="form-desc">Masukkan kredensial admin untuk mengelola portofolio.</p>
+          <p class="form-desc">Masukkan kredensial akun admin untuk mengelola portofolio.</p>
 
           <form @submit.prevent="handleLogin">
             <ion-item class="custom-input-item" lines="none">
@@ -54,39 +54,14 @@
               <span>{{ loading ? 'Memverifikasi...' : 'Masuk Dashboard' }}</span>
             </ion-button>
           </form>
+        </div>
 
-          <!-- Quick Fill Button for testing convenience -->
-          <div class="demo-cred-box">
-            <p class="demo-cred-text">Akun Default (dari database seed):</p>
-            <ion-button
-              fill="clear"
-              size="small"
-              class="quick-fill-btn"
-              @click="fillDefaultCredentials"
-            >
-              <ion-icon :icon="flashOutline" slot="start" />
-              Gunakan: admin / adminpassword123
-            </ion-button>
-          </div>
-
-          <!-- API URL Indicator -->
-          <div class="api-status-box" @click="openApiConfigAlert" style="cursor: pointer;" title="Klik untuk mengubah URL API">
-            <span class="api-dot" />
-            <span class="api-text">API: {{ apiUrl }} ✏️</span>
-          </div>
+        <!-- Security Footer Badge -->
+        <div class="security-badge">
+          <span class="security-dot" />
+          <span>TERENKRIPSI &bull; BIZNET GIO SECURE NETWORK</span>
         </div>
       </div>
-
-      <!-- Change API URL Alert -->
-      <ion-alert
-        :is-open="isApiAlertOpen"
-        header="Konfigurasi URL API"
-        sub-header="Masukkan alamat backend server"
-        message="Untuk Android Emulator gunakan: http://10.0.2.2:3001. Untuk HP fisik gunakan IP Wi-Fi laptop atau URL Cloud (HTTPS)."
-        :inputs="alertInputs"
-        :buttons="alertButtons"
-        @didDismiss="handleAlertDismiss"
-      />
 
       <!-- Toast Alert -->
       <ion-toast
@@ -112,79 +87,31 @@ import {
   IonIcon,
   IonSpinner,
   IonToast,
-  IonAlert,
 } from '@ionic/vue';
 import {
   shieldCheckmarkOutline,
   personOutline,
   lockClosedOutline,
   logInOutline,
-  flashOutline,
 } from 'ionicons/icons';
-import { authService, getApiBaseUrl, setApiBaseUrl } from '@/services/api';
+import { authService } from '@/services/api';
 
 const router = useRouter();
 
-const username = ref('admin');
-const password = ref('adminpassword123');
+const username = ref('');
+const password = ref('');
 const loading = ref(false);
-const apiUrl = ref('');
-
-const isApiAlertOpen = ref(false);
-const alertInputs = ref<any[]>([]);
-const alertButtons = [
-  {
-    text: 'Batal',
-    role: 'cancel',
-  },
-  {
-    text: 'Simpan',
-    role: 'confirm',
-  },
-];
-
-const openApiConfigAlert = () => {
-  alertInputs.value = [
-    {
-      name: 'url',
-      type: 'text',
-      placeholder: 'http://10.0.2.2:3001',
-      value: apiUrl.value,
-    },
-  ];
-  isApiAlertOpen.value = true;
-};
-
-const handleAlertDismiss = (ev: CustomEvent) => {
-  isApiAlertOpen.value = false;
-  if (ev.detail.role === 'confirm' && ev.detail.data?.values?.url) {
-    const newUrl = ev.detail.data.values.url.trim();
-    if (newUrl) {
-      setApiBaseUrl(newUrl);
-      apiUrl.value = getApiBaseUrl();
-      toastColor.value = 'success';
-      toastMessage.value = `URL API berhasil diubah: ${apiUrl.value}`;
-      showToast.value = true;
-    }
-  }
-};
 
 const showToast = ref(false);
 const toastMessage = ref('');
 const toastColor = ref('danger');
 
 onMounted(() => {
-  apiUrl.value = getApiBaseUrl();
   // If already authenticated, redirect to dashboard
   if (authService.isAuthenticated()) {
     router.replace('/tabs/dashboard');
   }
 });
-
-const fillDefaultCredentials = () => {
-  username.value = 'admin';
-  password.value = 'adminpassword123';
-};
 
 const handleLogin = async () => {
   if (!username.value || !password.value) return;
@@ -198,10 +125,10 @@ const handleLogin = async () => {
 
     setTimeout(() => {
       router.replace('/tabs/dashboard');
-    }, 500);
-  } catch (error: any) {
+    }, 400);
+  } catch (err: any) {
     toastColor.value = 'danger';
-    toastMessage.value = error.message || 'Gagal login. Periksa username dan password.';
+    toastMessage.value = err.message || 'Username atau password salah.';
     showToast.value = true;
   } finally {
     loading.value = false;
@@ -211,72 +138,97 @@ const handleLogin = async () => {
 
 <style scoped>
 .login-wrapper {
-  max-width: 420px;
-  margin: 40px auto;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
   position: relative;
-  z-index: 1;
 }
 
 .glow-orb {
   position: absolute;
-  top: -40px;
-  width: 280px;
-  height: 280px;
-  background: radial-gradient(circle, rgba(147, 51, 234, 0.28) 0%, transparent 70%);
-  filter: blur(50px);
+  top: 15%;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(147, 51, 234, 0.25) 0%, rgba(217, 70, 239, 0.1) 60%, transparent 80%);
+  filter: blur(40px);
   pointer-events: none;
-  z-index: -1;
 }
 
 .brand-section {
-  margin-bottom: 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 28px;
+  position: relative;
+  z-index: 1;
 }
 
 .logo-circle {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, rgba(147, 51, 234, 0.4), rgba(217, 70, 239, 0.2));
-  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  width: 76px;
+  height: 76px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.35), rgba(6, 182, 212, 0.25));
+  border: 1px solid rgba(168, 85, 247, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
-  box-shadow: 0 0 30px rgba(147, 51, 234, 0.35);
+  margin-bottom: 18px;
+  box-shadow: 0 0 35px rgba(147, 51, 234, 0.4);
 }
 
 .logo-icon {
-  font-size: 38px;
+  font-size: 40px;
   color: #c084fc;
 }
 
 .brand-title {
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 900;
-  letter-spacing: 0.06em;
-  margin: 0 0 6px 0;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px 0;
+  background: linear-gradient(135deg, #ffffff 40%, #e9d5ff 70%, #c084fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .brand-subtitle {
   font-size: 13px;
   color: #94a3b8;
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
+  font-weight: 500;
+}
+
+.badge-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #c084fc;
 }
 
 .form-card {
   width: 100%;
-  padding: 26px 20px;
+  max-width: 380px;
+  padding: 28px 22px;
   text-align: left;
+  border-radius: 24px;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  background: rgba(18, 14, 28, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
 }
 
 .form-title {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 800;
   color: #ffffff;
   margin: 0 0 6px 0;
@@ -285,22 +237,23 @@ const handleLogin = async () => {
 .form-desc {
   font-size: 13px;
   color: #94a3b8;
-  margin: 0 0 20px 0;
+  margin: 0 0 22px 0;
+  line-height: 1.5;
 }
 
 .custom-input-item {
-  --background: rgba(8, 6, 13, 0.7);
-  --border-radius: 12px;
+  --background: rgba(8, 6, 13, 0.75);
+  --border-radius: 14px;
   --padding-start: 14px;
-  border: 1px solid rgba(168, 85, 247, 0.25);
-  border-radius: 12px;
+  border: 1px solid rgba(168, 85, 247, 0.22);
+  border-radius: 14px;
   margin-bottom: 14px;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .custom-input-item:focus-within {
   border-color: #c084fc;
-  box-shadow: 0 0 15px rgba(192, 132, 252, 0.2);
+  box-shadow: 0 0 20px rgba(192, 132, 252, 0.25);
 }
 
 .input-icon {
@@ -310,52 +263,33 @@ const handleLogin = async () => {
 }
 
 .login-btn {
-  --background: linear-gradient(135deg, #9333ea, #d946ef);
-  --border-radius: 12px;
-  --box-shadow: 0 0 25px rgba(147, 51, 234, 0.4);
+  --background: linear-gradient(135deg, #9333ea, #c026d3);
+  --border-radius: 14px;
+  --box-shadow: 0 0 25px rgba(147, 51, 234, 0.45);
   font-weight: 700;
-  margin-top: 20px;
-  height: 48px;
+  margin-top: 22px;
+  height: 50px;
+  font-size: 15px;
 }
 
-.demo-cred-box {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  text-align: center;
-}
-
-.demo-cred-text {
-  font-size: 11px;
-  color: #64748b;
-  margin: 0 0 4px 0;
-}
-
-.quick-fill-btn {
-  --color: #c084fc;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.api-status-box {
+.security-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: #64748b;
+  letter-spacing: 0.05em;
 }
 
-.api-dot {
+.security-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 6px #22c55e;
-}
-
-.api-text {
-  font-size: 11px;
-  color: #64748b;
-  font-family: monospace;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
 }
 </style>

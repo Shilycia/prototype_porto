@@ -184,41 +184,7 @@
         </form>
       </div>
 
-      <!-- ================= 3. KONFIGURASI API ================= -->
-      <div class="settings-card glass-panel" style="margin-top: 20px;">
-        <div class="card-header">
-          <div class="header-icon-box cyan">
-            <ion-icon :icon="serverOutline" />
-          </div>
-          <div>
-            <h3 class="card-header-title">Server REST API</h3>
-            <p class="card-header-sub">Alamat server backend yang dituju aplikasi mobile.</p>
-          </div>
-        </div>
-
-        <div class="form-body">
-          <div class="form-group">
-            <label class="form-label">API Base URL</label>
-            <ion-item class="custom-input-item" lines="none">
-              <ion-input v-model="apiUrlInput" placeholder="http://localhost:3001" />
-            </ion-item>
-            <p class="hint-text">
-              * Jika menguji di Android Emulator, gunakan <code>http://10.0.2.2:3001</code>. Jika di HP fisik melalui Wi-Fi, gunakan IP laptop (misal <code>http://192.168.1.5:3001</code>).
-            </p>
-          </div>
-
-          <div class="api-btn-row">
-            <ion-button size="small" class="save-btn" @click="saveApiUrl">
-              Simpan URL API
-            </ion-button>
-            <ion-button size="small" fill="outline" color="medium" @click="resetApiUrl">
-              Reset Default
-            </ion-button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= 4. SESI & LOGOUT ================= -->
+      <!-- ================= 3. SESI & LOGOUT ================= -->
       <div class="settings-card glass-panel" style="margin-top: 20px; margin-bottom: 50px;">
         <div class="card-header">
           <div class="header-icon-box" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e;">
@@ -293,7 +259,6 @@ import {
   refreshOutline,
   personCircleOutline,
   callOutline,
-  serverOutline,
   logOutOutline,
   checkmarkOutline,
   cloudUploadOutline,
@@ -303,8 +268,6 @@ import {
   contactService,
   authService,
   uploadService,
-  getApiBaseUrl,
-  setApiBaseUrl,
   resolveMediaUrl,
   AdminProfile,
   ContactInfo,
@@ -331,8 +294,6 @@ const contactForm = ref<Partial<ContactInfo>>({
   linkedin: '',
   basis_lokasi: '',
 });
-
-const apiUrlInput = ref('http://localhost:3001');
 
 // Alert & Toast
 const showLogoutAlert = ref(false);
@@ -367,8 +328,6 @@ const loadAllData = async () => {
         basis_lokasi: contact.value.basis_lokasi || '',
       };
     }
-
-    apiUrlInput.value = getApiBaseUrl();
   } catch (err: any) {
     toastColor.value = 'danger';
     toastMessage.value = err.message || 'Gagal memuat pengaturan.';
@@ -464,23 +423,6 @@ const saveContact = async () => {
   } finally {
     savingContact.value = false;
   }
-};
-
-const saveApiUrl = () => {
-  if (apiUrlInput.value.trim()) {
-    setApiBaseUrl(apiUrlInput.value.trim());
-    toastColor.value = 'success';
-    toastMessage.value = `URL API disimpan: ${getApiBaseUrl()}`;
-    showToast.value = true;
-  }
-};
-
-const resetApiUrl = () => {
-  apiUrlInput.value = 'http://localhost:3001';
-  setApiBaseUrl('http://localhost:3001');
-  toastColor.value = 'primary';
-  toastMessage.value = 'URL API direset ke default (http://localhost:3001)';
-  showToast.value = true;
 };
 
 const handleLogout = () => {

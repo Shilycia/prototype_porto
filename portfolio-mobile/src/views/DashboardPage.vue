@@ -1,10 +1,18 @@
 <template>
   <ion-page>
     <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Dashboard</ion-title>
+      <ion-toolbar class="custom-toolbar">
+        <div class="header-brand-wrap">
+          <div class="header-logo-badge">
+            <span class="header-logo-text">&gt;_</span>
+          </div>
+          <div class="header-text-wrap">
+            <h1 class="header-title">shilycia's DEV</h1>
+            <span class="header-badge">PORTFOLIO CMS</span>
+          </div>
+        </div>
         <ion-buttons slot="end">
-          <ion-button @click="loadData" :disabled="loading">
+          <ion-button class="header-refresh-btn" @click="loadData" :disabled="loading">
             <ion-icon :icon="refreshOutline" />
           </ion-button>
         </ion-buttons>
@@ -540,5 +548,64 @@ onMounted(() => {
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.custom-toolbar {
+  --background: rgba(14, 10, 24, 0.9);
+  --border-color: rgba(168, 85, 247, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 4px 8px;
+}
+
+.header-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-logo-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: linear-gradient(135deg, #9333ea, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 12px rgba(147, 51, 234, 0.5);
+}
+
+.header-logo-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.header-text-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-title {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: #ffffff;
+  line-height: 1.15;
+}
+
+.header-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #c084fc;
+  line-height: 1.2;
+}
+
+.header-refresh-btn {
+  --color: #c084fc;
 }
 </style>
