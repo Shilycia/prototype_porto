@@ -8,6 +8,7 @@
   "type": "module",
   "scripts": {
     "build": "prisma generate && nest build",
+    "test:drive": "node verify-drive-oauth.mjs",
     "clean:db": "node clean-db.js",
     "deploy": "nest deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

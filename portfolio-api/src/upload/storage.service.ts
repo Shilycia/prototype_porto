@@ -60,7 +60,17 @@ export class StorageService {
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 
-    if (serviceEmail && privateKey) {
+    if (clientId && clientSecret && refreshToken) {
+      try {
+        const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
+        oauth2Client.setCredentials({ refresh_token: refreshToken });
+        this.driveClient = google.drive({ version: 'v3', auth: oauth2Client });
+        this.folderId = folderId || null;
+        this.logger.log(`Google Drive Storage initialized via OAuth2 Refresh Token (Folder ID: ${this.folderId || 'root'}).`);
+      } catch (err: any) {
+        this.logger.warn(`Failed to initialize Google Drive OAuth2: ${err.message}`);
+      }
+    } else if (serviceEmail && privateKey) {
       try {
         const auth = new google.auth.JWT({
           email: serviceEmail,
@@ -72,16 +82,6 @@ export class StorageService {
         this.logger.log(`Google Drive Storage initialized via Service Account (Folder ID: ${this.folderId || 'root'}).`);
       } catch (err: any) {
         this.logger.warn(`Failed to initialize Google Drive Service Account: ${err.message}`);
-      }
-    } else if (clientId && clientSecret && refreshToken) {
-      try {
-        const oauth2Client = new google.auth.OAuth2(clientId, clientSecret);
-        oauth2Client.setCredentials({ refresh_token: refreshToken });
-        this.driveClient = google.drive({ version: 'v3', auth: oauth2Client });
-        this.folderId = folderId || null;
-        this.logger.log(`Google Drive Storage initialized via OAuth2 Refresh Token (Folder ID: ${this.folderId || 'root'}).`);
-      } catch (err: any) {
-        this.logger.warn(`Failed to initialize Google Drive OAuth2: ${err.message}`);
       }
     } else {
       this.logger.log(
