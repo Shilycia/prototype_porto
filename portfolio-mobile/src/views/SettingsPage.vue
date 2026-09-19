@@ -31,7 +31,7 @@
         <!-- Avatar Preview -->
         <div class="avatar-preview-wrap">
           <img
-            :src="profileForm.foto_profile || '/favicon.png'"
+            :src="resolveMediaUrl(profileForm.foto_profile) || '/favicon.png'"
             alt="Preview Foto"
             class="avatar-preview-img"
             @error="(e: any) => e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'"
@@ -305,6 +305,7 @@ import {
   uploadService,
   getApiBaseUrl,
   setApiBaseUrl,
+  resolveMediaUrl,
   AdminProfile,
   ContactInfo,
 } from '@/services/api';

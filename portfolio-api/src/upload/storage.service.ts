@@ -25,6 +25,17 @@ export interface UploadResult {
   provider: 'gdrive' | 'local';
 }
 
+function parseFolderId(raw?: string): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  const folderMatch = trimmed.match(/folders\/([a-zA-Z0-9_-]+)/);
+  if (folderMatch && folderMatch[1]) return folderMatch[1];
+  const idMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (idMatch && idMatch[1]) return idMatch[1];
+  return trimmed.split('?')[0].split('&')[0];
+}
+
 @Injectable()
 export class StorageService {
   private readonly logger = new Logger(StorageService.name);
@@ -44,7 +55,7 @@ export class StorageService {
 
     const serviceEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
     const privateKey = process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-    const folderId = process.env.GOOGLE_DRIVE_FOLDER_ID;
+    const folderId = parseFolderId(process.env.GOOGLE_DRIVE_FOLDER_ID);
     const clientId = process.env.GOOGLE_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
     const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
@@ -58,7 +69,7 @@ export class StorageService {
         });
         this.driveClient = google.drive({ version: 'v3', auth });
         this.folderId = folderId || null;
-        this.logger.log('Google Drive Storage initialized via Service Account.');
+        this.logger.log(`Google Drive Storage initialized via Service Account (Folder ID: ${this.folderId || 'root'}).`);
       } catch (err: any) {
         this.logger.warn(`Failed to initialize Google Drive Service Account: ${err.message}`);
       }
@@ -68,7 +79,7 @@ export class StorageService {
         oauth2Client.setCredentials({ refresh_token: refreshToken });
         this.driveClient = google.drive({ version: 'v3', auth: oauth2Client });
         this.folderId = folderId || null;
-        this.logger.log('Google Drive Storage initialized via OAuth2 Refresh Token.');
+        this.logger.log(`Google Drive Storage initialized via OAuth2 Refresh Token (Folder ID: ${this.folderId || 'root'}).`);
       } catch (err: any) {
         this.logger.warn(`Failed to initialize Google Drive OAuth2: ${err.message}`);
       }
@@ -79,7 +90,7 @@ export class StorageService {
     }
   }
 
-  async uploadFile(file: MulterFile): Promise<UploadResult> {
+  async uploadFile(file: MulterFile, requestBaseUrl?: string): Promise<UploadResult> {
     if (!file) {
       throw new Error('No file provided for upload.');
     }
@@ -150,7 +161,8 @@ export class StorageService {
     const localFilePath = path.join(this.uploadDir, safeFilename);
     fs.writeFileSync(localFilePath, file.buffer);
 
-    const baseUrl = process.env.API_BASE_URL || 'http://localhost:3001';
+    const defaultUrl = 'http://43.173.33.116:3001';
+    const baseUrl = (process.env.API_BASE_URL || requestBaseUrl || defaultUrl).replace(/\/+$/, '');
     const localUrl = `${baseUrl}/uploads/${safeFilename}`;
 
     this.logger.log(`Uploaded file to local storage: ${localFilePath}`);
@@ -215,11 +227,12 @@ export class StorageService {
     const idParamMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
     if (idParamMatch && idParamMatch[1]) return idParamMatch[1];
 
-    // 4. Local fallback upload: http://.../uploads/{filename}
+    // 4. Local fallback upload: /uploads/{filename} or http://.../uploads/{filename}
     if (url.includes('/uploads/')) {
       const parts = url.split('/uploads/');
       if (parts[1]) {
-        return `local:${parts[1]}`;
+        const cleanFilename = parts[1].split('?')[0].split('#')[0];
+        return `local:${cleanFilename}`;
       }
     }
 

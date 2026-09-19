@@ -69,7 +69,7 @@
           <div class="card-media-wrap">
             <img
               v-if="work.media_urls && work.media_urls.length > 0"
-              :src="work.media_urls[0]"
+              :src="resolveMediaUrl(work.media_urls[0])"
               :alt="work.nama_karya"
               class="card-img"
               @error="(e: any) => e.target.src = 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=600'"
@@ -275,7 +275,7 @@
                 class="media-preview-box"
               >
                 <img
-                  :src="form.media_urls[0]"
+                  :src="resolveMediaUrl(form.media_urls[0])"
                   alt="Preview"
                   class="preview-img"
                   @error="(e: any) => e.target.style.display = 'none'"
@@ -360,7 +360,7 @@ import {
   createOutline,
   trashOutline,
 } from 'ionicons/icons';
-import { worksService, uploadService, WorkItem } from '@/services/api';
+import { worksService, uploadService, resolveMediaUrl, WorkItem } from '@/services/api';
 
 const route = useRoute();
 

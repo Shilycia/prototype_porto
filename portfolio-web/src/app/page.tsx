@@ -7,11 +7,12 @@ import ScrollReveal from '../components/ScrollReveal';
 import SectionDivider from '../components/SectionDivider';
 import Icon from '../components/Icon';
 import Nebula from '../components/Nebula';
+import { resolveMediaUrl } from '../lib/media';
 
 async function getWorks() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/works`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://43.173.33.116:3001'}/works`,
       { cache: 'no-store' }
     );
     if (!res.ok) return [];
@@ -238,7 +239,7 @@ export default async function Home() {
                       <div className="aspect-[4/3] relative overflow-hidden bg-gray-900">
                         {work.media_urls?.length > 0 ? (
                           <img
-                            src={work.media_urls[0]}
+                            src={resolveMediaUrl(work.media_urls[0])}
                             alt={work.nama_karya}
                             loading="lazy"
                             decoding="async"

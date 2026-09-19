@@ -13,18 +13,37 @@ export class ProfileService {
     private storageService: StorageService
   ) {}
 
+  private normalizeProfile<T extends { foto_profile?: string | null }>(profile: T | null): T | null {
+    if (!profile) return null;
+    if (profile.foto_profile) {
+      const defaultUrl = 'http://43.173.33.116:3001';
+      const baseUrl = (process.env.API_BASE_URL || defaultUrl).replace(/\/+$/, '');
+      if (
+        profile.foto_profile.startsWith('http://localhost:3001') ||
+        profile.foto_profile.startsWith('http://127.0.0.1:3001') ||
+        profile.foto_profile.startsWith('http://10.0.2.2:3001')
+      ) {
+        profile.foto_profile = profile.foto_profile.replace(/^https?:\/\/[^/]+/, baseUrl);
+      }
+    }
+    return profile;
+  }
+
   async create(createProfileDto: CreateProfileDto) {
-    return this.prisma.profile.create({
+    const res = await this.prisma.profile.create({
       data: createProfileDto as any,
     });
+    return this.normalizeProfile(res);
   }
 
   async findAll() {
-    return this.prisma.profile.findMany();
+    const profiles = await this.prisma.profile.findMany();
+    return profiles.map((p) => this.normalizeProfile(p));
   }
 
   async findOne(id: number) {
-    return this.prisma.profile.findUnique({ where: { id } });
+    const profile = await this.prisma.profile.findUnique({ where: { id } });
+    return this.normalizeProfile(profile);
   }
 
   async update(id: number, updateProfileDto: UpdateProfileDto) {
@@ -35,20 +54,24 @@ export class ProfileService {
         if (
           existing &&
           existing.foto_profile &&
-          existing.foto_profile !== updateProfileDto.foto_profile &&
           !existing.foto_profile.startsWith('/') // don't delete local static default asset
         ) {
-          await this.storageService.deleteFileByUrl(existing.foto_profile);
+          const oldFileId = this.storageService.extractFileId(existing.foto_profile);
+          const newFileId = this.storageService.extractFileId(updateProfileDto.foto_profile);
+          if (oldFileId && newFileId && oldFileId !== newFileId) {
+            await this.storageService.deleteFile(oldFileId);
+          }
         }
       } catch (err: any) {
         this.logger.warn(`Failed cleaning up old profile photo: ${err.message}`);
       }
     }
 
-    return this.prisma.profile.update({
+    const res = await this.prisma.profile.update({
       where: { id },
       data: updateProfileDto as any,
     });
+    return this.normalizeProfile(res);
   }
 
   async remove(id: number) {

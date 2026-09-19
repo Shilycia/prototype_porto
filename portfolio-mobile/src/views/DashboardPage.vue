@@ -21,7 +21,7 @@
         <div class="profile-left">
           <div class="avatar-ring">
             <img
-              :src="profile?.foto_profile || '/favicon.png'"
+              :src="resolveMediaUrl(profile?.foto_profile) || '/favicon.png'"
               alt="Profile"
               class="avatar-img"
               @error="(e: any) => e.target.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200'"
@@ -151,7 +151,7 @@
           <div class="thumb-wrap">
             <img
               v-if="work.media_urls && work.media_urls.length > 0"
-              :src="work.media_urls[0]"
+              :src="resolveMediaUrl(work.media_urls[0])"
               :alt="work.nama_karya"
               class="item-thumb"
               @error="(e: any) => e.target.src = 'https://images.unsplash.com/photo-1514565131-fce0801e5785?w=100'"
@@ -206,6 +206,7 @@ import {
   worksService,
   experienceService,
   certificatesService,
+  resolveMediaUrl,
   AdminProfile,
   WorkItem,
 } from '@/services/api';

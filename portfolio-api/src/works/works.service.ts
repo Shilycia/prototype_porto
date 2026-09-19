@@ -13,20 +13,51 @@ export class WorksService {
     private storageService: StorageService
   ) {}
 
+  private normalizeWork<T extends { media_urls?: string[]; dokumen_url?: string | null }>(work: T | null): T | null {
+    if (!work) return null;
+    const defaultUrl = 'http://43.173.33.116:3001';
+    const baseUrl = (process.env.API_BASE_URL || defaultUrl).replace(/\/+$/, '');
+
+    const fixUrl = (url: string): string => {
+      if (
+        url.startsWith('http://localhost:3001') ||
+        url.startsWith('http://127.0.0.1:3001') ||
+        url.startsWith('http://10.0.2.2:3001')
+      ) {
+        return url.replace(/^https?:\/\/[^/]+/, baseUrl);
+      }
+      if (url.startsWith('/uploads/')) {
+        return `${baseUrl}${url}`;
+      }
+      return url;
+    };
+
+    if (work.media_urls && Array.isArray(work.media_urls)) {
+      work.media_urls = work.media_urls.map(fixUrl);
+    }
+    if (work.dokumen_url) {
+      work.dokumen_url = fixUrl(work.dokumen_url);
+    }
+    return work;
+  }
+
   async create(createDto: CreateWorkDto) {
-    return this.prisma.work.create({
+    const res = await this.prisma.work.create({
       data: createDto as any,
     });
+    return this.normalizeWork(res);
   }
 
   async findAll() {
-    return this.prisma.work.findMany({
+    const works = await this.prisma.work.findMany({
       orderBy: { created_at: 'desc' },
     });
+    return works.map((w) => this.normalizeWork(w));
   }
 
   async findOne(id: number) {
-    return this.prisma.work.findUnique({ where: { id } });
+    const work = await this.prisma.work.findUnique({ where: { id } });
+    return this.normalizeWork(work);
   }
 
   async update(id: number, updateDto: UpdateWorkDto) {
@@ -35,11 +66,16 @@ export class WorksService {
       try {
         const existing = await this.prisma.work.findUnique({ where: { id } });
         if (existing && existing.media_urls) {
-          const removedUrls = existing.media_urls.filter(
-            (oldUrl) => !updateDto.media_urls!.includes(oldUrl)
+          const newFileIds = new Set(
+            updateDto.media_urls
+              .map((u) => this.storageService.extractFileId(u))
+              .filter(Boolean)
           );
-          for (const url of removedUrls) {
-            await this.storageService.deleteFileByUrl(url);
+          for (const oldUrl of existing.media_urls) {
+            const oldId = this.storageService.extractFileId(oldUrl);
+            if (oldId && !newFileIds.has(oldId)) {
+              await this.storageService.deleteFile(oldId);
+            }
           }
         }
       } catch (err: any) {
@@ -47,10 +83,11 @@ export class WorksService {
       }
     }
 
-    return this.prisma.work.update({
+    const res = await this.prisma.work.update({
       where: { id },
       data: updateDto as any,
     });
+    return this.normalizeWork(res);
   }
 
   async remove(id: number) {

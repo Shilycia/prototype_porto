@@ -122,7 +122,7 @@
 
             <div class="cert-url-box" v-if="cert.file_url">
               <ion-icon :icon="linkOutline" />
-              <a :href="cert.file_url" target="_blank" class="cert-link">Buka Berkas / Kredensial</a>
+              <a :href="resolveMediaUrl(cert.file_url)" target="_blank" class="cert-link">Buka Berkas / Kredensial</a>
             </div>
 
             <div class="item-actions">
@@ -399,6 +399,7 @@ import {
   experienceService,
   certificatesService,
   uploadService,
+  resolveMediaUrl,
   ExperienceItem,
   CertificateItem,
 } from '@/services/api';

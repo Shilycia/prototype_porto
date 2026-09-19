@@ -4,11 +4,12 @@ import CyberAperture from '../../components/CyberAperture';
 import SectionDivider from '../../components/SectionDivider';
 import Icon from '../../components/Icon';
 import Nebula from '../../components/Nebula';
+import { resolveMediaUrl } from '../../lib/media';
 
 async function getProfile() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/profile`,
+      `${process.env.NEXT_PUBLIC_API_URL || 'http://43.173.33.116:3001'}/profile`,
       { cache: 'no-store' }
     );
     if (!res.ok) return [];
@@ -58,9 +59,10 @@ export default async function AboutPage() {
   const profiles = await getProfile();
   const experiences = await getExperiences();
   const profile = profiles.length > 0 ? profiles[0] : null;
-  const profilePhoto = profile?.foto_profile?.includes('unsplash')
-    ? '/profile-transparent.png'
-    : (profile?.foto_profile || '/profile-transparent.png');
+  const resolvedPhoto = resolveMediaUrl(profile?.foto_profile);
+  const profilePhoto = resolvedPhoto && !resolvedPhoto.includes('unsplash')
+    ? resolvedPhoto
+    : '/profile-transparent.png';
 
   return (
     <div className="min-h-screen bg-black text-white" style={{ fontFamily: 'var(--font-outfit), Outfit, sans-serif' }}>

@@ -34,6 +34,29 @@ export function setApiBaseUrl(url: string): void {
   }
 }
 
+export function resolveMediaUrl(url: string | null | undefined): string {
+  if (!url) return '';
+  const trimmed = url.trim();
+  if (!trimmed) return '';
+
+  const apiBase = getApiBaseUrl().replace(/\/+$/, '');
+
+  if (
+    trimmed.startsWith('http://localhost:3001') ||
+    trimmed.startsWith('https://localhost:3001') ||
+    trimmed.startsWith('http://127.0.0.1:3001') ||
+    trimmed.startsWith('http://10.0.2.2:3001')
+  ) {
+    return trimmed.replace(/^https?:\/\/[^/]+/, apiBase);
+  }
+
+  if (trimmed.startsWith('/uploads/')) {
+    return `${apiBase}${trimmed}`;
+  }
+
+  return trimmed;
+}
+
 export function getAuthToken(): string | null {
   if (typeof window !== 'undefined') {
     return localStorage.getItem('porto_admin_token');

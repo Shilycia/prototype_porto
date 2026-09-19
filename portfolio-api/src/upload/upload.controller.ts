@@ -6,7 +6,9 @@ import {
   UseInterceptors,
   UploadedFile,
   BadRequestException,
+  Req,
 } from '@nestjs/common';
+import type { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService, UploadResult } from './storage.service.js';
 
@@ -22,12 +24,19 @@ export class UploadController {
       },
     })
   )
-  async uploadFile(@UploadedFile() file: any): Promise<UploadResult> {
+  async uploadFile(
+    @UploadedFile() file: any,
+    @Req() req: Request,
+  ): Promise<UploadResult> {
     if (!file) {
       throw new BadRequestException('File tidak ditemukan dalam request.');
     }
 
-    return await this.storageService.uploadFile(file);
+    const host = req?.get?.('host');
+    const protocol = req?.protocol || 'http';
+    const requestBaseUrl = host ? `${protocol}://${host}` : undefined;
+
+    return await this.storageService.uploadFile(file, requestBaseUrl);
   }
 
   @Delete(':fileId')
