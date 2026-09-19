@@ -128,7 +128,7 @@ export default async function ContactPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 2: CONTACT CHANNELS ===================== */}
-      <section className="relative w-full py-16 px-6 bg-black overflow-hidden">
+      <section className="relative w-full py-16 px-6 bg-black overflow-hidden section-deferred">
         {/* Ambient Cosmic Nebulae filling empty space */}
         <Nebula variant="fuchsia" size="xl" position="top-left" direction="normal" intensity="normal" />
         <Nebula variant="purple" size="lg" position="bottom-right" direction="reverse" intensity="normal" />
@@ -187,7 +187,7 @@ export default async function ContactPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 3: COLLABORATION PROCESS (THEMATIC APERTURE OBJECT) ===================== */}
-      <div className="relative py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/15 to-black">
+      <div className="relative py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/15 to-black section-deferred">
         {/* Thematic Lens Hologram & Cosmic Nebulae */}
         <CyberAperture />
         <Nebula variant="cosmic" size="xl" position="center-right" direction="normal" intensity="normal" />

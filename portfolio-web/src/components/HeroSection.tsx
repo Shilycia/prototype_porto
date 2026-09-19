@@ -18,8 +18,10 @@ export default function HeroSection() {
 
   useEffect(() => {
     let animId: number;
+    let isVisible = true;
 
     const onMouseMove = (e: MouseEvent) => {
+      if (!isVisible) return;
       const { innerWidth, innerHeight } = window;
       // Normalized between -1 and 1 from center of screen
       mouse.current.targetX = (e.clientX / innerWidth - 0.5) * 2;
@@ -27,6 +29,7 @@ export default function HeroSection() {
     };
 
     const onScroll = () => {
+      if (!isVisible) return;
       scrollY.current = window.scrollY;
     };
 
@@ -35,6 +38,8 @@ export default function HeroSection() {
 
     // Smooth animation loop using spring interpolation (lerp)
     const animate = () => {
+      if (!isVisible) return;
+
       const lerpFactor = 0.07;
       mouse.current.x += (mouse.current.targetX - mouse.current.x) * lerpFactor;
       mouse.current.y += (mouse.current.targetY - mouse.current.y) * lerpFactor;
@@ -86,12 +91,47 @@ export default function HeroSection() {
       animId = requestAnimationFrame(animate);
     };
 
-    animId = requestAnimationFrame(animate);
+    const startAnimate = () => {
+      cancelAnimationFrame(animId);
+      animId = requestAnimationFrame(animate);
+    };
+
+    startAnimate();
+
+    // Pause physics calculations completely when hero section is not visible
+    const heroEl = heroRef.current;
+    let observer: IntersectionObserver | null = null;
+    if (heroEl) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting && !document.hidden;
+          if (isVisible) {
+            startAnimate();
+          } else {
+            cancelAnimationFrame(animId);
+          }
+        },
+        { threshold: 0 }
+      );
+      observer.observe(heroEl);
+    }
+
+    const onVisibilityChange = () => {
+      isVisible = !document.hidden;
+      if (isVisible) {
+        startAnimate();
+      } else {
+        cancelAnimationFrame(animId);
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       cancelAnimationFrame(animId);
+      if (observer) observer.disconnect();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, []);
 

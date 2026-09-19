@@ -79,7 +79,7 @@ export default async function WorksPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 2: WORKS GALLERY ===================== */}
-      <section className="relative w-full py-16 px-6 bg-black overflow-hidden">
+      <section className="relative w-full py-16 px-6 bg-black overflow-hidden section-deferred">
         {/* Ambient Cosmic Nebulae framing gallery in the empty void */}
         <Nebula variant="cosmic" size="xl" position="top-left" direction="normal" intensity="normal" />
         <Nebula variant="fuchsia" size="lg" position="bottom-right" direction="reverse" intensity="normal" />
@@ -107,6 +107,8 @@ export default async function WorksPage() {
                         <img
                           src={work.media_urls[0]}
                           alt={work.nama_karya}
+                          loading="lazy"
+                          decoding="async"
                           className="object-cover w-full h-full group-hover:scale-108 transition-transform duration-700 ease-out"
                         />
                       ) : (
@@ -151,7 +153,7 @@ export default async function WorksPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 3: BOTTOM COLLABORATION BANNER (THEMATIC HORIZON) ===================== */}
-      <div className="relative py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/20 to-black">
+      <div className="relative py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/20 to-black section-deferred">
         {/* Cosmic Nebulae */}
         <Nebula variant="cosmic" size="xl" position="center" direction="normal" intensity="vibrant" />
         <Nebula variant="fuchsia" size="lg" position="bottom-right" direction="reverse" intensity="normal" />

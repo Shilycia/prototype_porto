@@ -22,22 +22,29 @@ export default function ScrollReveal({
   once = true,
 }: ScrollRevealProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [animDone, setAnimDone] = useState(false);
   const domRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const element = domRef.current;
     if (!element) return;
 
+    let timeoutId: NodeJS.Timeout;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true);
+            timeoutId = setTimeout(() => {
+              setAnimDone(true);
+            }, delay + duration + 50);
             if (once) {
               observer.unobserve(element);
             }
           } else if (!once) {
             setIsVisible(false);
+            setAnimDone(false);
           }
         });
       },
@@ -48,8 +55,11 @@ export default function ScrollReveal({
     );
 
     observer.observe(element);
-    return () => observer.disconnect();
-  }, [once]);
+    return () => {
+      observer.disconnect();
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [once, delay, duration]);
 
   const getTransform = () => {
     if (isVisible) return 'none';
@@ -80,7 +90,7 @@ export default function ScrollReveal({
         transitionDuration: `${duration}ms`,
         transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
         transitionDelay: `${delay}ms`,
-        willChange: 'opacity, transform',
+        willChange: animDone ? 'auto' : 'opacity, transform',
       }}
     >
       {children}

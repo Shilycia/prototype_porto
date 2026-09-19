@@ -34,7 +34,7 @@ export default async function Home() {
       <SectionDivider />
 
       {/* ===================== SECTION 2: STATS BAND ===================== */}
-      <section className="relative z-10 py-16 px-6 bg-black overflow-hidden">
+      <section className="relative z-10 py-16 px-6 bg-black overflow-hidden section-deferred">
         {/* Ambient Cosmic Nebulae on empty sides */}
         <Nebula variant="cyan" size="md" position="center-left" direction="normal" intensity="normal" />
         <Nebula variant="purple" size="md" position="center-right" direction="reverse" intensity="normal" />
@@ -64,7 +64,7 @@ export default async function Home() {
       <SectionDivider />
 
       {/* ===================== SECTION 3: VISI & MISI (THEMATIC CYBER LENS APERTURE OBJECT) ===================== */}
-      <section className="relative py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/15 to-black">
+      <section className="relative py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/15 to-black section-deferred">
         {/* Thematic Background Object: Rotating Cyber Camera Lens Aperture */}
         <CyberAperture />
 
@@ -189,7 +189,7 @@ export default async function Home() {
       <SectionDivider />
 
       {/* ===================== SECTION 4: FEATURED WORKS ===================== */}
-      <section className="relative py-24 px-6 bg-black overflow-hidden">
+      <section className="relative py-24 px-6 bg-black overflow-hidden section-deferred">
         {/* Cosmic Nebulae framing the works gallery in the empty void */}
         <Nebula variant="cosmic" size="xl" position="top-left" direction="normal" intensity="normal" />
         <Nebula variant="fuchsia" size="lg" position="bottom-right" direction="reverse" intensity="normal" />
@@ -240,6 +240,8 @@ export default async function Home() {
                           <img
                             src={work.media_urls[0]}
                             alt={work.nama_karya}
+                            loading="lazy"
+                            decoding="async"
                             className="object-cover w-full h-full group-hover:scale-108 transition-transform duration-700 ease-out"
                           />
                         ) : (
@@ -280,7 +282,7 @@ export default async function Home() {
       <SectionDivider />
 
       {/* ===================== SECTION 5: CTA BANNER (THEMATIC CYBER HORIZON) ===================== */}
-      <section className="relative py-28 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/20 to-black">
+      <section className="relative py-28 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/20 to-black section-deferred">
         {/* Cosmic Nebulae */}
         <Nebula variant="cosmic" size="xl" position="center" direction="normal" intensity="vibrant" />
         <Nebula variant="cyan" size="lg" position="bottom-left" direction="reverse" intensity="normal" />

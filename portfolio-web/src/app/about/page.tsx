@@ -89,6 +89,7 @@ export default async function AboutPage() {
                 <img
                   src={profilePhoto}
                   alt={profile?.nama || 'Diyul Maulana'}
+                  decoding="async"
                   className="w-full h-auto max-h-[350px] sm:max-h-[400px] object-contain select-none pointer-events-none drop-shadow-[0_15px_40px_rgba(168,85,247,0.4)] group-hover:scale-105 transition-transform duration-500"
                   style={{
                     maskImage: 'linear-gradient(to bottom, black 80%, transparent 100%)',
@@ -161,7 +162,7 @@ export default async function AboutPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 2: SKILLS & CREATIVE ARSENAL ===================== */}
-      <div className="py-24 px-6 bg-black relative overflow-hidden">
+      <div className="py-24 px-6 bg-black relative overflow-hidden section-deferred">
         {/* Ambient Cosmic Nebulae filling empty sides */}
         <Nebula variant="cosmic" size="xl" position="top-left" direction="normal" intensity="normal" />
         <Nebula variant="purple" size="lg" position="bottom-right" direction="reverse" intensity="normal" />
@@ -209,7 +210,7 @@ export default async function AboutPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 3: EXPERIENCE TIMELINE (THEMATIC NODES) ===================== */}
-      <div className="py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/15 to-black relative">
+      <div className="py-24 px-6 overflow-hidden bg-gradient-to-b from-black via-purple-950/15 to-black relative section-deferred">
         {/* Cosmic Nebulae */}
         <Nebula variant="purple" size="lg" position="bottom-left" direction="reverse" intensity="subtle" />
         <Nebula variant="cosmic" size="md" position="top-right" direction="normal" intensity="normal" />
@@ -266,7 +267,7 @@ export default async function AboutPage() {
       <SectionDivider />
 
       {/* ===================== SECTION 4: INVITATION CTA BANNER ===================== */}
-      <div className="py-24 px-6 bg-black text-center relative overflow-hidden">
+      <div className="py-24 px-6 bg-black text-center relative overflow-hidden section-deferred">
         {/* Cosmic Nebulae framing CTA */}
         <Nebula variant="cosmic" size="xl" position="center" direction="normal" intensity="vibrant" />
         <Nebula variant="fuchsia" size="lg" position="center-right" direction="reverse" intensity="normal" />

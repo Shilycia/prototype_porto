@@ -303,21 +303,30 @@ body {
 }
 
 /* ============================
-   GLASS CARD
+   GLASS CARD (High-Performance Backdrop)
    ============================ */
 .glass-card {
-  background: rgba(255, 255, 255, 0.025);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(168, 85, 247, 0.12);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(14, 10, 28, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  box-shadow: 0 8px 28px 0 rgba(0, 0, 0, 0.35);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .glass-card:hover {
-  border-color: rgba(192, 132, 252, 0.4);
-  box-shadow: 0 16px 48px -4px rgba(147, 51, 234, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transform: translateY(-5px);
+  border-color: rgba(192, 132, 252, 0.45);
+  box-shadow: 0 14px 40px -4px rgba(147, 51, 234, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-4px);
+}
+
+/* ============================================================
+   DEFERRED RENDERING FOR BELOW-THE-FOLD SECTIONS (Modern Web Guide)
+   Drastically speeds up initial load, saves CPU & battery
+   ============================================================ */
+.section-deferred {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 650px;
 }
 
 /* ============================
@@ -395,12 +404,7 @@ body {
 
 /* ============================
    SECTION BLEND EDGES
-   — adds a soft black gradient fade
-     at top and/or bottom of a section
-     so sections melt into each other
    ============================ */
-
-/* Fade from black at the top */
 .fade-top::before {
   content: '';
   position: absolute;
@@ -411,7 +415,6 @@ body {
   z-index: 2;
 }
 
-/* Fade to black at the bottom */
 .fade-bottom::after {
   content: '';
   position: absolute;
@@ -422,10 +425,6 @@ body {
   z-index: 2;
 }
 
-/* Both top and bottom fade */
-.fade-edges {
-  /* top */
-}
 .fade-edges::before {
   content: '';
   position: absolute;
@@ -445,49 +444,40 @@ body {
   z-index: 2;
 }
 
-/* ============================
-   COSMIC NEBULA ANIMATIONS
-   ============================ */
+/* ============================================================
+   GPU-COMPOSITED COSMIC NEBULA ANIMATIONS (Zero Layout Paint)
+   ============================================================ */
 
 @keyframes nebulaDrift {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
   33% {
-    transform: translate(25px, -18px) rotate(4deg) scale(1.05);
+    transform: translate3d(16px, -12px, 0) rotate(3deg) scale(1.03);
   }
   66% {
-    transform: translate(-20px, 15px) rotate(-3deg) scale(0.96);
-  }
-  100% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
+    transform: translate3d(-12px, 10px, 0) rotate(-2deg) scale(0.98);
   }
 }
 
 @keyframes nebulaDriftReverse {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
   }
   33% {
-    transform: translate(-22px, 20px) rotate(-4deg) scale(0.97);
+    transform: translate3d(-14px, 12px, 0) rotate(-3deg) scale(0.98);
   }
   66% {
-    transform: translate(18px, -15px) rotate(3deg) scale(1.06);
-  }
-  100% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
+    transform: translate3d(12px, -10px, 0) rotate(2deg) scale(1.03);
   }
 }
 
-@keyframes nebulaMorph {
+@keyframes nebulaGlowPulse {
   0%, 100% {
-    border-radius: 54% 46% 42% 58% / 60% 48% 52% 40%;
+    transform: scale3d(1, 1, 1) rotate(0deg);
   }
-  33% {
-    border-radius: 40% 60% 55% 45% / 45% 65% 35% 55%;
-  }
-  66% {
-    border-radius: 65% 35% 48% 52% / 52% 40% 60% 48%;
+  50% {
+    transform: scale3d(1.05, 1.05, 1) rotate(2deg);
   }
 }
 
@@ -503,20 +493,31 @@ body {
 }
 
 .animate-nebula-drift {
-  animation: nebulaDrift 22s ease-in-out infinite;
+  animation: nebulaDrift 24s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-nebula-drift-reverse {
-  animation: nebulaDriftReverse 26s ease-in-out infinite;
+  animation: nebulaDriftReverse 28s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-nebula-morph {
-  animation: nebulaMorph 18s ease-in-out infinite;
+  animation: nebulaGlowPulse 16s ease-in-out infinite;
+  will-change: transform;
+  border-radius: 50%;
 }
 
 .animate-stardust {
-  animation: stardustTwinkle 3s ease-in-out infinite;
+  animation: stardustTwinkle 3.5s ease-in-out infinite;
+}
+
+/* Accessibility: Reduce motion when requested by user */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
