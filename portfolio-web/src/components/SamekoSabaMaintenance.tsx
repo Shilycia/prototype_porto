@@ -9,7 +9,7 @@ interface SamekoSabaMaintenanceProps {
 
 const DIALOGUES = [
   "Awaawa~! Saba gak sengaja numpahin kopi ke kabel server... Kaniki lagi benerin! ☕💦",
-  "Kaniki Engineering lagi kencengin baut-baut VPS Biznet Gio! Dikit lagi ya~ 🦀🔧",
+  "Kaniki Engineering lagi kencengin baut-baut Helipod Cloud! Dikit lagi ya~ 🦀🔧",
   "Kalibrasi Mercusuar Port 3000 sedang berlangsung! Jangan sampai tersesat di laut kabut~ 🚨🌊",
   "Sambil nunggu server reboot, yuk kumpulin kerang laut bareng Saba! 🐚✨",
   "Tenang Kaniki bros! Kita bakal berenang online lagi secepatnya! 🦈💙",
@@ -161,7 +161,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         {/* Live Status Pill */}
         <div className="hidden sm:flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-cyan-500/30 shadow-inner text-xs font-mono">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-slate-300">Biznet Gio VPS:</span>
+          <span className="text-slate-300">Helipod Host:</span>
           <span className="text-cyan-300 font-semibold">Tuning Beacon</span>
         </div>
       </header>
@@ -397,7 +397,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl text-left mb-8">
           <div className="bg-slate-900/60 backdrop-blur-md p-3.5 rounded-xl border border-slate-800">
             <div className="text-[10px] uppercase font-mono text-slate-400">Infrastruktur Host</div>
-            <div className="text-xs font-semibold text-slate-200 mt-0.5">Biznet Gio Cloud VPS</div>
+            <div className="text-xs font-semibold text-slate-200 mt-0.5">Helipod.io Cloud</div>
             <div className="text-[10px] text-cyan-400 font-mono">Ubuntu 24.04 LTS</div>
           </div>
 

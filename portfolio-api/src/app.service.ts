@@ -346,7 +346,7 @@ export class AppService {
       <div class="specs-grid">
         <div class="spec-item">
           <span class="spec-label">Server Host</span>
-          <span class="spec-val">Biznet Gio Cloud</span>
+          <span class="spec-val">Helipod.io Cloud</span>
         </div>
         <div class="spec-item">
           <span class="spec-label">Database</span>
@@ -452,7 +452,7 @@ export class AppService {
     </div>
 
     <footer>
-      &copy; ${new Date().getFullYear()} Shilycia Portfolio System. Hosted on Biznet Gio VPS.
+      &copy; ${new Date().getFullYear()} Shilycia Portfolio System. Hosted on Helipod.io.
     </footer>
   </div>
 </body>

@@ -59,7 +59,7 @@
         <!-- Security Footer Badge -->
         <div class="security-badge">
           <span class="security-dot" />
-          <span>TERENKRIPSI &bull; BIZNET GIO SECURE NETWORK</span>
+          <span>TERENKRIPSI &bull; HELIPOD SECURE NETWORK</span>
         </div>
       </div>
 
