@@ -1,0 +1,7 @@
+{
+  "name": "portoapp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}
