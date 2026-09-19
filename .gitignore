@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Production builds
+dist/
+**/dist/
+.next/
+**/.next/
+out/
+build/
+**/build/
+
+# Environment variables (Credentials)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Uploads & local storage files
+portfolio-api/uploads/*
+!portfolio-api/uploads/.gitkeep
+
+# Logs & temp
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+.temp/
+.tmp/
+
+# IDE / Editor
+.vscode/
+.idea/

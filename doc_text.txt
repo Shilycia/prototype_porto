@@ -1,0 +1,290 @@
+DOKUMEN RANCANGAN PROYEK
+PORTOFOLIO DIGITAL
+Web Portfolio + REST API + Mobile App
+Konsep: Dark Modern Arts • Personal Branding • Creative Showcase
+Tujuan utama: membangun media untuk menampilkan identitas, karya, pengalaman, sertifikat, dan informasi kontak secara profesional.
+Karakter produk: modern, artistik, personal, responsif, dan dapat dikembangkan melalui arsitektur API.
+1. Ringkasan Proyek
+Proyek ini merupakan platform portofolio digital pribadi yang dirancang sebagai media personal branding sekaligus creative showcase. Fokus utama bukan hanya menampilkan data diri, tetapi memperlihatkan kemampuan dan karakter pemilik melalui karya fotografi, editing foto, video/film, pengalaman, serta sertifikasi.
+Sistem menggunakan pendekatan tiga komponen utama: Web Portfolio sebagai antarmuka publik, Nest.js sebagai REST API (menggunakan Prisma) dan pusat pengelolaan data dengan PostgreSQL serta penyimpanan media di Google Drive, dan aplikasi mobile berbasis Ionic khusus untuk admin manajemen konten portofolio.
+2. Tujuan Proyek
+Show up / personal branding: membuat identitas dan kemampuan pemilik mudah ditemukan dan dipahami.
+Creative showcase: menampilkan karya visual secara menarik dan terstruktur.
+Professional profile: menyediakan pengalaman, sertifikat, deskripsi diri, dan kontak dalam satu tempat.
+Centralized data: seluruh data portofolio dikelola melalui API sehingga dapat digunakan oleh web dan mobile.
+Scalable architecture: membangun fondasi yang memungkinkan penambahan fitur tanpa mengubah struktur inti.
+Mobile-ready: menyediakan pengalaman penggunaan yang nyaman pada perangkat mobile dan aplikasi Ionic.
+3. Target Pengguna
+Pengunjung umum yang ingin mengenal pemilik portofolio.
+Recruiter atau perusahaan yang ingin melihat kemampuan dan pengalaman.
+Client yang ingin melihat kualitas karya sebelum menggunakan jasa.
+Pemilik/admin yang mengelola konten portofolio.
+4. Konsep Visual & Branding
+Arah visual menggunakan nuansa dark modern arts. Desain harus terasa premium, minimalis, sinematik, dan menempatkan karya sebagai elemen utama. Interface sebaiknya tidak terlalu ramai agar foto dan video menjadi focal point.
+Elemen
+Arah
+Catatan
+Base color
+Dark / charcoal
+Background utama
+Accent
+Satu warna identitas
+Untuk tombol, link, highlight
+Typography
+Modern sans-serif
+Judul kuat, isi mudah dibaca
+Visual
+Cinematic / editorial
+Karya mendapat prioritas
+Layout
+Minimal & spacious
+Whitespace cukup
+Motion
+Subtle
+Transition/hover tidak berlebihan
+5. Struktur Halaman Web
+Halaman
+Fungsi
+Home / Landing
+Hero personal branding, headline, deskripsi singkat, featured works, CTA menuju karya/kontak.
+About / Profile
+Nama, deskripsi diri, kemampuan singkat, dan identitas profesional.
+Works / Karya
+Daftar karya dengan filter/kategori dan detail karya.
+Experience
+Timeline pengalaman dari terbaru ke terlama.
+Certificates
+Galeri sertifikat dengan detail dan preview foto/dokumen.
+Contact
+Nomor telepon, email, Instagram, LinkedIn, dan basis lokasi.
+Admin
+Dashboard untuk CRUD data portofolio melalui API.
+6. Modul Data
+Data Diri / Profile
+id
+nama
+deskripsi_diri
+foto_profile (opsional)
+updated_at
+Karya / Works
+id
+nama_karya
+deskripsi
+tanggal_pembuatan
+log / catatan proses
+media foto / video
+dokumen pendukung
+kategori
+created_at
+updated_at
+Pengalaman / Experience
+id
+nama_pengalaman
+deskripsi
+tanggal_mulai
+tanggal_selesai (nullable untuk ongoing)
+created_at
+updated_at
+Sertifikat / Certificates
+id
+nama_sertifikat
+foto / file sertifikat
+tanggal (opsional)
+penerbit (opsional)
+created_at
+Kontak / Contact
+id
+nomor_telepon
+email
+instagram
+linkedin
+basis_lokasi
+7. Arsitektur Teknologi
+Arsitektur utama dibagi menjadi tiga pilar:
+1. Web Portfolio: Berjalan di web untuk menampilkan portofolio.
+2. Mobile Apps (Ionic): Digunakan khusus untuk admin manajemen konten.
+3. Backend: Menggunakan Nest.js untuk server dan logic.
+Pilar
+Peran
+WEB PORTFOLIO
+Frontend publik untuk pengunjung. Menampilkan seluruh konten dengan desain dark modern arts dan responsive layout.
+NESTJS API
+REST API sebagai sumber data utama, autentikasi admin, CRUD, validasi, upload media, dan integrasi database/storage.
+IONIC MOBILE
+Aplikasi mobile yang mengonsumsi API. Dapat digunakan sebagai versi mobile portfolio dan/atau aplikasi admin sesuai scope implementasi.
+Komponen teknologi pendukung utama:
+- Database: PostgreSQL
+- ORM/API: Prisma
+Authentication: JWT + refresh token atau session berbasis secure cookie.
+- Media Storage: Google Drive (untuk penyimpanan foto dan video)
+API documentation: Swagger / OpenAPI.
+Deployment: frontend hosting + backend server/container + managed database.
+Version control: Git + GitHub/GitLab.
+8. Gambaran Arsitektur
+Alur utama sistem: Pengunjung -> Web Portfolio -> NestJS REST API -> PostgreSQL & Google Drive. Admin melakukan login melalui Mobile Apps (Ionic) khusus admin manajemen, kemudian melakukan operasi CRUD melalui API menggunakan Prisma.
+Prinsip penting: web dan mobile tidak menyimpan data portofolio sebagai sumber utama. Data terpusat di backend agar perubahan konten dapat langsung digunakan oleh seluruh client.
+9. Rancangan REST API Awal
+Method
+Endpoint
+Fungsi
+GET
+/profile
+Mengambil data diri
+PUT
+/profile
+Memperbarui data diri — admin
+GET
+/works
+Daftar karya
+GET
+/works/:id
+Detail karya
+POST
+/works
+Tambah karya — admin
+PUT
+/works/:id
+Edit karya — admin
+DELETE
+/works/:id
+Hapus karya — admin
+GET
+/experiences
+Daftar pengalaman
+POST/PUT/DELETE
+/experiences
+CRUD pengalaman — admin
+GET
+/certificates
+Daftar sertifikat
+POST/PUT/DELETE
+/certificates
+CRUD sertifikat — admin
+GET
+/contact
+Mengambil informasi kontak
+PUT
+/contact
+Memperbarui kontak — admin
+POST
+/auth/login
+Login admin
+POST
+/auth/refresh
+Refresh token bila digunakan
+POST
+/auth/logout
+Logout admin
+10. Admin & Keamanan
+Admin memiliki autentikasi sebelum dapat mengakses fitur pengelolaan.
+Password disimpan menggunakan hashing yang aman, bukan plaintext.
+Validasi input dilakukan di backend.
+Endpoint CRUD admin dilindungi authorization guard.
+Upload file dibatasi berdasarkan ukuran dan MIME type.
+Nama file upload dibuat aman/unik untuk menghindari konflik.
+CORS dikonfigurasi hanya untuk client yang diperlukan.
+Rate limiting dapat diterapkan pada endpoint autentikasi.
+Secret key dan kredensial database disimpan melalui environment variables.
+Backup database dan media dipertimbangkan sebelum production.
+11. Detail Fitur Karya
+Karena portofolio berorientasi visual, modul karya menjadi pusat pengalaman pengguna. Setiap karya dapat memiliki halaman detail yang berisi judul, deskripsi, tanggal pembuatan, log/proses, galeri foto, video, dan dokumen pendukung.
+Kategori: Fotografi, Photo Editing, Video, Film, atau kategori lain.
+Featured flag untuk memilih karya yang tampil di Home.
+Thumbnail/cover untuk tampilan kartu.
+Gallery untuk beberapa foto.
+Video embed atau file video sesuai kebutuhan hosting.
+Dokumen dapat berupa PDF atau format relevan.
+Urutan karya dapat diatur berdasarkan tanggal atau prioritas.
+12. Responsive & Mobile Experience
+Web wajib responsive dengan pendekatan mobile-first. Pada layar kecil, navigasi disederhanakan, media mengikuti aspect ratio yang tepat, dan tombol dibuat mudah disentuh. Ionic menggunakan API yang sama sehingga data tetap konsisten.
+13. Alur Pengelolaan Konten
+1. Admin login.
+2. Admin memilih modul: Profile, Works, Experience, Certificates, atau Contact.
+3. Admin membuat/mengubah/menghapus data.
+4. Frontend mengirim request ke NestJS API.
+5. API melakukan authentication, authorization, validation, lalu menyimpan perubahan.
+6. Client mengambil data terbaru melalui API.
+7. Perubahan tampil pada web dan mobile.
+14. Tahapan Pengembangan
+Fase
+Output
+Fase 1 — Planning
+Finalisasi kebutuhan, sitemap, wireframe, struktur database, API contract.
+Fase 2 — UI/UX
+Membuat design system dark modern arts, responsive layout, komponen UI, dan prototype.
+Fase 3 — Backend
+Setup NestJS, database, ORM, authentication, CRUD, upload media, Swagger.
+Fase 4 — Web
+Implementasi landing, profile, works, experience, certificates, contact, dan admin.
+Fase 5 — Mobile
+Setup Ionic, integrasi API, halaman portfolio/mobile, dan modul admin bila dipilih.
+Fase 6 — Integration
+Integrasi seluruh client dengan API, error handling, loading state, empty state.
+Fase 7 — Testing
+Functional test, responsive test, API test, auth test, upload test, dan basic security test.
+Fase 8 — Deployment
+Deploy backend, database, storage, web, serta build mobile.
+Fase 9 — Maintenance
+Backup, monitoring, bug fixing, dan pengembangan fitur.
+15. MVP (Minimum Viable Product)
+Landing/Home.
+Profile.
+Works dengan detail karya.
+Experience.
+Certificates.
+Contact.
+NestJS REST API.
+Database.
+Admin authentication.
+CRUD seluruh konten utama.
+Responsive web.
+Ionic client dasar.
+16. Fitur Pengembangan Lanjutan
+Search dan filter karya.
+Tag/keyword karya.
+Like/view counter.
+Analytics jumlah kunjungan.
+Dark/light theme switcher.
+SEO metadata dan Open Graph.
+Custom domain.
+PWA.
+Push notification untuk admin.
+Draft/publish status.
+Activity log perubahan data.
+Multi-language Indonesia/English.
+CMS yang lebih lengkap.
+17. Struktur Project yang Disarankan
+Struktur repository dapat dipisahkan menjadi tiga project agar setiap client dan backend memiliki lifecycle pengembangan yang jelas:
+portfolio-web/ — frontend web publik + admin web bila dipilih.
+portfolio-api/ — NestJS REST API, database layer, authentication, upload/media.
+portfolio-mobile/ — Ionic mobile application (Khusus Admin Manajemen).
+docs/ — API contract, ERD, wireframe, dokumentasi deployment.
+18. Risiko & Antisipasi
+Risiko
+Antisipasi
+Ukuran media besar
+Gunakan compression, thumbnail, batas ukuran upload, dan object storage.
+API tidak aman
+Authentication, authorization, validation, rate limit, HTTPS, dan secret management.
+Desain terlalu berat
+Prioritaskan performa gambar/video dan lazy loading.
+Data sulit dikelola
+Gunakan struktur database ter-normalisasi dan CRUD admin.
+Mobile & web tidak sinkron
+Gunakan satu API sebagai source of truth.
+Scope membesar
+Tetapkan MVP dan masukkan fitur tambahan ke backlog.
+19. Definition of Done
+Semua modul utama dapat ditampilkan dari API.
+Admin dapat melakukan CRUD tanpa mengubah database secara manual.
+Authentication dan authorization berjalan.
+Upload media tervalidasi.
+Web berjalan baik pada desktop dan mobile.
+Ionic berhasil membaca data dari API.
+Tidak ada secret/key yang ditulis langsung di source code.
+Error, loading, dan empty state tersedia.
+API terdokumentasi.
+Project memiliki README dan panduan deployment.
+20. Kesimpulan Rancangan
+Portofolio ini dirancang sebagai personal branding platform yang tidak berhenti pada halaman statis. Dengan NestJS sebagai API dan Ionic sebagai mobile client, proyek dapat berkembang menjadi sistem portofolio yang terstruktur dan mudah dikelola. Identitas visual dark modern arts menjadi pembeda utama, sementara arsitektur API-first menjaga agar data dapat digunakan lintas platform.
+Prioritas implementasi adalah membangun MVP yang solid terlebih dahulu: desain visual, data model, API, admin CRUD, web publik, dan mobile client. Fitur lanjutan dapat ditambahkan setelah alur inti stabil.

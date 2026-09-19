@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id             Int      @id @default(autoincrement())
+  nama           String
+  deskripsi_diri String
+  foto_profile   String?
+  updated_at     DateTime @updatedAt
+}
+
+model Work {
+  id                Int      @id @default(autoincrement())
+  nama_karya        String
+  deskripsi         String
+  tanggal_pembuatan DateTime?
+  log_proses        String?
+  media_urls        String[] 
+  dokumen_url       String?
+  kategori          String?
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+}
+
+model Experience {
+  id              Int      @id @default(autoincrement())
+  nama_pengalaman String
+  deskripsi       String
+  tanggal_mulai   DateTime
+  tanggal_selesai DateTime? 
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+}
+
+model Certificate {
+  id              Int      @id @default(autoincrement())
+  nama_sertifikat String
+  file_url        String
+  tanggal         DateTime?
+  penerbit        String?
+  created_at      DateTime @default(now())
+}
+
+model Contact {
+  id            Int      @id @default(autoincrement())
+  nomor_telepon String?
+  email         String?
+  instagram     String?
+  linkedin      String?
+  basis_lokasi  String?
+}
+
+model Admin {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  password   String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
