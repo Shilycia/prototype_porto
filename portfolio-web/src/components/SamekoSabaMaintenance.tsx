@@ -1,16 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 interface SamekoSabaMaintenanceProps {
   onBypass?: () => void;
 }
 
+interface BubbleTrail {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  opacity: number;
+}
+
+interface ClickRipple {
+  id: number;
+  x: number;
+  y: number;
+}
+
 const DIALOGUES = [
   "Awaawa~! Saba gak sengaja numpahin kopi ke kabel server... Kaniki lagi benerin! ☕💦",
   "Kaniki Engineering lagi kencengin baut-baut Helipod Cloud! Dikit lagi ya~ 🦀🔧",
-  "Kalibrasi Mercusuar Port 3000 sedang berlangsung! Jangan sampai tersesat di laut kabut~ 🚨🌊",
+  "Kalibrasi Mercusuar & Stasiun Pantai sedang berlangsung! Jangan sampai tersesat di ombak kabut~ 🚨🌊",
   "Sambil nunggu server reboot, yuk kumpulin kerang laut bareng Saba! 🐚✨",
   "Tenang Kaniki bros! Kita bakal berenang online lagi secepatnya! 🦈💙",
 ];
@@ -20,6 +34,19 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
   const [cheerCount, setCheerCount] = useState(42);
   const [floatingParticles, setFloatingParticles] = useState<{ id: number; src: string; x: number }[]>([]);
   const [uptimeStr, setUptimeStr] = useState("00:00:00");
+
+  // Custom Cursor & Parallax State
+  const [cursorPos, setCursorPos] = useState({ x: -200, y: -200 });
+  const [isCursorHovered, setIsCursorHovered] = useState(false);
+  const [isCursorDown, setIsCursorDown] = useState(false);
+  const [isCursorVisible, setIsCursorVisible] = useState(false);
+  const [bubbleTrails, setBubbleTrails] = useState<BubbleTrail[]>([]);
+  const [ripples, setRipples] = useState<ClickRipple[]>([]);
+  
+  // Parallax offsets (smooth interpolated)
+  const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const targetParallax = useRef({ x: 0, y: 0 });
+  const currentParallax = useRef({ x: 0, y: 0 });
 
   // Cycle Saba dialogues every 6 seconds
   useEffect(() => {
@@ -41,6 +68,90 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  // Custom Cursor and Parallax Controller
+  useEffect(() => {
+    // Only activate on devices with a fine pointer (mouse/trackpad)
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    document.body.classList.add("saba-cursor-active");
+
+    let animId: number;
+    let lastTrailTime = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+      if (!isCursorVisible) setIsCursorVisible(true);
+
+      // Target parallax from center (-1 to +1)
+      const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+      const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+      targetParallax.current = { x: nx, y: ny };
+
+      // Detect hover over interactive elements
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const interactive = target.closest("a, button, input, [role='button'], .group, .interactive-hover");
+        setIsCursorHovered(!!interactive);
+      }
+
+      // Add gentle water bubble trail
+      const now = performance.now();
+      if (now - lastTrailTime > 55) {
+        lastTrailTime = now;
+        const newBubble: BubbleTrail = {
+          id: Date.now() + Math.random(),
+          x: e.clientX + (Math.random() * 10 - 5),
+          y: e.clientY + 10 + (Math.random() * 8 - 4),
+          size: Math.random() * 8 + 5,
+          opacity: 0.65,
+        };
+        setBubbleTrails((prev) => [...prev.slice(-12), newBubble]);
+      }
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      setIsCursorDown(true);
+      // Spawn expanding water ripple on click
+      const newRipple: ClickRipple = {
+        id: Date.now() + Math.random(),
+        x: e.clientX,
+        y: e.clientY,
+      };
+      setRipples((prev) => [...prev.slice(-4), newRipple]);
+      setTimeout(() => {
+        setRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
+      }, 700);
+    };
+
+    const handleMouseUp = () => setIsCursorDown(false);
+    const handleMouseLeave = () => setIsCursorVisible(false);
+    const handleMouseEnter = () => setIsCursorVisible(true);
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mouseleave", handleMouseLeave);
+    document.addEventListener("mouseenter", handleMouseEnter);
+
+    // Smooth lerp physics loop for parallax
+    const loop = () => {
+      currentParallax.current.x += (targetParallax.current.x - currentParallax.current.x) * 0.08;
+      currentParallax.current.y += (targetParallax.current.y - currentParallax.current.y) * 0.08;
+      setParallax({ x: currentParallax.current.x, y: currentParallax.current.y });
+      animId = requestAnimationFrame(loop);
+    };
+    animId = requestAnimationFrame(loop);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      document.body.classList.remove("saba-cursor-active");
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mouseleave", handleMouseLeave);
+      document.removeEventListener("mouseenter", handleMouseEnter);
+    };
+  }, [isCursorVisible]);
 
   // Cute Web Audio API chime sound
   const playCuteChime = () => {
@@ -66,7 +177,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         osc.stop(ctx.currentTime + i * 0.08 + 0.3);
       });
     } catch {
-      // Audio context might be restricted before interaction
+      // Audio context restricted fallback
     }
   };
 
@@ -97,56 +208,239 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
     <div className="relative min-h-screen w-full overflow-hidden bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
       
       {/* =========================================
-          ANIMATED BEACH BACKGROUND (Sameko Saba Beach)
+          CUSTOM SAMEKO SABA BEACH CURSOR & TRAIL
+          ========================================= */}
+      {/* Water Bubble Trail Particles */}
+      {bubbleTrails.map((b) => (
+        <div
+          key={b.id}
+          className="fixed pointer-events-none rounded-full bg-cyan-200/40 border border-cyan-100/60 z-[9998] transition-all duration-500 ease-out"
+          style={{
+            left: `${b.x}px`,
+            top: `${b.y}px`,
+            width: `${b.size}px`,
+            height: `${b.size}px`,
+            transform: "translate(-50%, -50%) scale(0.7)",
+            opacity: b.opacity,
+            boxShadow: "0 0 6px rgba(56, 189, 248, 0.4)",
+          }}
+        />
+      ))}
+
+      {/* Water Click Ripple Effects */}
+      {ripples.map((r) => (
+        <div
+          key={r.id}
+          className="fixed pointer-events-none rounded-full border-2 border-cyan-300/80 z-[9998] animate-ping-slow"
+          style={{
+            left: `${r.x}px`,
+            top: `${r.y}px`,
+            width: "50px",
+            height: "50px",
+            marginLeft: "-25px",
+            marginTop: "-25px",
+            boxShadow: "0 0 20px rgba(56, 189, 248, 0.7)",
+          }}
+        />
+      ))}
+
+      {/* Main Sameko Saba Nautical Cursor Pointer */}
+      <div
+        className="fixed pointer-events-none z-[9999] transition-opacity duration-200"
+        style={{
+          left: `${cursorPos.x}px`,
+          top: `${cursorPos.y}px`,
+          opacity: isCursorVisible ? 1 : 0,
+          transform: "translate3d(0, 0, 0)",
+          willChange: "transform, left, top",
+        }}
+      >
+        <div
+          className="relative -ml-2 -mt-2 transition-transform duration-200 ease-out"
+          style={{
+            transform: isCursorDown
+              ? "scale(0.85) rotate(-8deg)"
+              : isCursorHovered
+              ? "scale(1.35) rotate(12deg)"
+              : "scale(1) rotate(0deg)",
+          }}
+        >
+          {/* Custom SVG Nautical Cursor (Paper Boat + Aqua Pointer) */}
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="filter drop-shadow-[0_2px_8px_rgba(6,182,212,0.85)]">
+            {/* Outer White Border for crisp contrast */}
+            <path
+              d="M3 3 L15 28 L19 18 L29 14 Z"
+              fill="#ffffff"
+            />
+            {/* Main Aqua Cyan Body */}
+            <path
+              d="M5 6 L14 24 L17 16 L25 13 Z"
+              fill="url(#cursorGrad)"
+            />
+            {/* Center Golden Paper Boat Accent */}
+            <polygon
+              points="14,12 18,12 16,8"
+              fill="#fde047"
+              stroke="#ca8a04"
+              strokeWidth="0.8"
+            />
+            {/* Pearl Droplet */}
+            <circle cx="16" cy="14" r="1.8" fill="#ffffff" />
+            <defs>
+              <linearGradient id="cursorGrad" x1="5" y1="6" x2="25" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#38bdf8" />
+                <stop offset="50%" stopColor="#06b6d4" />
+                <stop offset="100%" stopColor="#0284c7" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          {/* Hover Sparkle Badge */}
+          {isCursorHovered && (
+            <div className="absolute -top-2.5 -right-2 text-xs select-none animate-bounce">
+              ✨
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* =========================================
+          ANIMATED BEACH BACKGROUND WITH PARALLAX
           ========================================= */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {/* Base Beach Image */}
+        
+        {/* Layer 1: Base Beach Canvas (Deep Parallax: shifts opposite to cursor) */}
         <div 
-          className="absolute inset-0 bg-cover bg-bottom md:bg-center transform scale-[1.02] transition-transform duration-1000"
+          className="absolute -inset-10 bg-cover bg-bottom md:bg-center transition-transform duration-300 ease-out"
           style={{
             backgroundImage: "url('/saba-beach-bg.png')",
+            transform: `translate3d(${parallax.x * -16}px, ${parallax.y * -12}px, 0) scale(1.08)`,
           }}
         />
 
         {/* Ambient Darkening Overlay for Contrast & Readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/45 via-slate-950/35 to-slate-950/80 backdrop-blur-[0.5px]" />
 
+        {/* Layer 2: Animated Shoreline Waves (Exact Image Shoreline Curve Alignment) */}
+        <div 
+          className="absolute inset-x-0 bottom-0 top-0 pointer-events-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate3d(${parallax.x * -24}px, ${parallax.y * -16}px, 0)`,
+          }}
+        >
+          {/* Primary Wave: Translucent Turquoise Water Tide + Glowing Foam Line */}
+          <div className="absolute inset-0 animate-wave-ebb">
+            <svg 
+              viewBox="0 0 1024 575" 
+              preserveAspectRatio="none" 
+              className="w-full h-full"
+            >
+              <defs>
+                <filter id="foamGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Tide Water Wash */}
+              <path
+                d="M 0,386 C 80,335 120,318 160,318 C 240,318 280,355 360,362 C 460,370 600,385 680,390 C 740,395 780,432 840,429 C 880,425 920,345 960,332 L 1024,328 L 1024,575 L 0,575 Z"
+                fill="rgba(34, 211, 238, 0.22)"
+              />
+
+              {/* Glowing Seafoam Line that rides the shoreline */}
+              <path
+                d="M 0,386 C 80,335 120,318 160,318 C 240,318 280,355 360,362 C 460,370 600,385 680,390 C 740,395 780,432 840,429 C 880,425 920,345 960,332 L 1024,328"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.95)"
+                strokeWidth="5"
+                strokeLinecap="round"
+                filter="url(#foamGlow)"
+                className="animate-foam-pulse"
+              />
+
+              {/* Outer Aqua Foam Halo */}
+              <path
+                d="M 0,388 C 80,337 120,320 160,320 C 240,320 280,357 360,364 C 460,372 600,387 680,392 C 740,397 780,434 840,431 C 880,427 920,347 960,334 L 1024,330"
+                fill="none"
+                stroke="rgba(56, 189, 248, 0.55)"
+                strokeWidth="10"
+                strokeLinecap="round"
+                opacity="0.6"
+              />
+            </svg>
+          </div>
+
+          {/* Secondary Delicate Tide Wave (Delayed Phase) */}
+          <div className="absolute inset-0 animate-wave-secondary" style={{ animationDelay: "-3.5s" }}>
+            <svg 
+              viewBox="0 0 1024 575" 
+              preserveAspectRatio="none" 
+              className="w-full h-full opacity-60"
+            >
+              <path
+                d="M 0,394 C 90,345 130,328 170,328 C 250,328 290,365 370,372 C 470,380 610,395 690,400 C 750,405 790,442 850,439 C 890,435 930,355 970,342 L 1024,338 L 1024,575 L 0,575 Z"
+                fill="rgba(20, 184, 166, 0.15)"
+              />
+              <path
+                d="M 0,394 C 90,345 130,328 170,328 C 250,328 290,365 370,372 C 470,380 610,395 690,400 C 750,405 790,442 850,439 C 890,435 930,355 970,342 L 1024,338"
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.7)"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
+        </div>
+
         {/* Animated Water Caustic Shimmer on Lower Ocean Half */}
-        <div className="absolute bottom-0 inset-x-0 h-[45%] bg-gradient-to-t from-cyan-500/15 via-teal-400/10 to-transparent pointer-events-none animate-water-glimmer" />
+        <div className="absolute bottom-0 inset-x-0 h-[45%] bg-gradient-to-t from-cyan-500/18 via-teal-400/10 to-transparent pointer-events-none animate-water-glimmer" />
 
-        {/* Animated Shoreline Wave Foam (Ebb & Flow Tide) */}
-        <div className="absolute bottom-[32%] sm:bottom-[36%] inset-x-0 h-16 pointer-events-none animate-wave-ebb">
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full opacity-60 animate-wave-shift">
-            <path
-              d="M0,40 C150,80 350,10 500,45 C650,80 850,20 1000,50 C1100,65 1180,45 1200,40 L1200,120 L0,120 Z"
-              fill="rgba(165, 243, 252, 0.45)"
-              className="animate-foam-pulse"
-            />
-          </svg>
-        </div>
-
-        {/* Secondary Delicate Wave Foam Layer */}
-        <div className="absolute bottom-[30%] sm:bottom-[33%] inset-x-0 h-14 pointer-events-none animate-wave-ebb" style={{ animationDelay: "-3s" }}>
-          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full opacity-35">
-            <path
-              d="M0,50 C200,20 400,70 600,35 C800,75 1000,30 1200,55 L1200,120 L0,120 Z"
-              fill="rgba(255, 255, 255, 0.35)"
-            />
-          </svg>
+        {/* Layer 3: Floating Stickers with Reactive Cursor Parallax */}
+        {/* Paper Boat (Left): Floats near beach shoreline */}
+        <div 
+          className="absolute top-28 left-[6%] w-16 h-12 pointer-events-none animate-float-slow hidden md:block transition-transform duration-300 ease-out" 
+          style={{ 
+            transform: `translate3d(${parallax.x * 36}px, ${parallax.y * 24}px, 0)`,
+            animationDelay: "0.5s",
+          }}
+        >
+          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain drop-shadow-lg opacity-85" />
         </div>
 
-        {/* Ambient Floating Hand-drawn Stickers on Beach Scene */}
-        <div className="absolute top-28 left-[6%] w-14 h-11 opacity-70 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "0.5s" }}>
-          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain drop-shadow-md" />
+        {/* Blue Fish (Bottom Left): Swimming in the water layer */}
+        <div 
+          className="absolute bottom-28 left-[10%] w-14 h-10 pointer-events-none animate-float-slow hidden md:block transition-transform duration-300 ease-out" 
+          style={{ 
+            transform: `translate3d(${parallax.x * -42}px, ${parallax.y * -26}px, 0)`,
+            animationDelay: "2s",
+          }}
+        >
+          <img src="/stickers/saba-fish.png" alt="Blue Fish" className="w-full h-full object-contain drop-shadow-lg opacity-85" />
         </div>
-        <div className="absolute bottom-28 left-[10%] w-12 h-9 opacity-75 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "2s" }}>
-          <img src="/stickers/saba-fish.png" alt="Blue Fish" className="w-full h-full object-contain drop-shadow-md" />
+
+        {/* Paper Boat (Right): Bobbing on the waves */}
+        <div 
+          className="absolute top-36 right-[8%] w-16 h-12 pointer-events-none animate-float-slow hidden md:block transition-transform duration-300 ease-out" 
+          style={{ 
+            transform: `translate3d(${parallax.x * 44}px, ${parallax.y * 30}px, 0)`,
+            animationDelay: "1.5s",
+          }}
+        >
+          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain drop-shadow-lg opacity-80" />
         </div>
-        <div className="absolute top-36 right-[8%] w-14 h-11 opacity-65 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "1.5s" }}>
-          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain drop-shadow-md" />
-        </div>
-        <div className="absolute bottom-24 right-[12%] w-14 h-10 opacity-80 pointer-events-none animate-crab-scuttle hidden md:block">
-          <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain drop-shadow-md" />
+
+        {/* Kaniki Crab (Bottom Right): Scurrying along the wet sand */}
+        <div 
+          className="absolute bottom-24 right-[12%] w-16 h-11 pointer-events-none animate-crab-scuttle hidden md:block transition-transform duration-300 ease-out"
+          style={{ 
+            transform: `translate3d(${parallax.x * -36}px, ${parallax.y * -20}px, 0)`,
+          }}
+        >
+          <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain drop-shadow-lg opacity-90" />
         </div>
 
         {/* Rising Ocean Bubbles */}
@@ -194,12 +488,22 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
       </header>
 
       {/* =========================================
-          MAIN MAINTENANCE STAGE
+          MAIN MAINTENANCE STAGE (Parallax Floating)
           ========================================= */}
-      <main className="relative z-20 max-w-4xl mx-auto px-6 py-6 flex flex-col items-center text-center my-auto">
+      <main 
+        className="relative z-20 max-w-4xl mx-auto px-6 py-6 flex flex-col items-center text-center my-auto transition-transform duration-300 ease-out"
+        style={{
+          transform: `translate3d(${parallax.x * 12}px, ${parallax.y * 8}px, 0)`,
+        }}
+      >
         
-        {/* Official Sameko Saba Beach Logo */}
-        <div className="mb-4 animate-float-slow select-none">
+        {/* Official Sameko Saba Beach Logo (With Depth Parallax) */}
+        <div 
+          className="mb-4 animate-float-slow select-none transition-transform duration-300 ease-out"
+          style={{
+            transform: `translate3d(${parallax.x * 22}px, ${parallax.y * 14}px, 0)`,
+          }}
+        >
           <img 
             src="/stickers/saba-logo.png" 
             alt="Sameko Saba Official Logo" 
@@ -290,7 +594,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
           </p>
         </div>
 
-        {/* Progress Bar with Swimming Shark Fin */}
+        {/* Progress Bar with Swimming Fish Sticker */}
         <div className="w-full max-w-lg mb-8 bg-slate-900/70 p-4 rounded-2xl border border-slate-700/60 backdrop-blur-md shadow-xl">
           <div className="flex items-center justify-between text-xs font-mono text-slate-300 mb-2">
             <span className="flex items-center gap-1.5 text-cyan-300 font-bold">
@@ -408,7 +712,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             <span>🏠</span> Portal Utama (Port 80)
           </a>
 
-          {/* Admin Bypass Link (if callback or query supported) */}
+          {/* Admin Bypass Link */}
           {onBypass ? (
             <button
               onClick={onBypass}
