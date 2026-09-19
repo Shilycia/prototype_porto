@@ -94,67 +94,76 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-[#060c1c] via-[#09152e] to-[#040814] text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
+    <div className="relative min-h-screen w-full overflow-hidden bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-cyan-500 selection:text-black">
       
       {/* =========================================
-          BACKGROUND AMBIENT & LIGHTHOUSE BEAM
+          ANIMATED BEACH BACKGROUND (Sameko Saba Beach)
           ========================================= */}
-      {/* Ocean Mist & Depth Glow */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {/* Lighthouse rotating searchlight */}
-        <div className="absolute top-[-50px] left-1/2 -translate-x-1/2 w-[800px] h-[900px] pointer-events-none opacity-40">
-          <div
-            className="w-full h-full animate-lighthouse-beam"
-            style={{
-              background: "conic-gradient(from 180deg at 50% 0%, transparent 160deg, rgba(56, 189, 248, 0.45) 178deg, rgba(254, 240, 138, 0.6) 180deg, rgba(56, 189, 248, 0.45) 182deg, transparent 200deg)",
-              filter: "blur(20px)",
-            }}
-          />
+        {/* Base Beach Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-bottom md:bg-center transform scale-[1.02] transition-transform duration-1000"
+          style={{
+            backgroundImage: "url('/saba-beach-bg.png')",
+          }}
+        />
+
+        {/* Ambient Darkening Overlay for Contrast & Readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/45 via-slate-950/35 to-slate-950/80 backdrop-blur-[0.5px]" />
+
+        {/* Animated Water Caustic Shimmer on Lower Ocean Half */}
+        <div className="absolute bottom-0 inset-x-0 h-[45%] bg-gradient-to-t from-cyan-500/15 via-teal-400/10 to-transparent pointer-events-none animate-water-glimmer" />
+
+        {/* Animated Shoreline Wave Foam (Ebb & Flow Tide) */}
+        <div className="absolute bottom-[32%] sm:bottom-[36%] inset-x-0 h-16 pointer-events-none animate-wave-ebb">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full opacity-60 animate-wave-shift">
+            <path
+              d="M0,40 C150,80 350,10 500,45 C650,80 850,20 1000,50 C1100,65 1180,45 1200,40 L1200,120 L0,120 Z"
+              fill="rgba(165, 243, 252, 0.45)"
+              className="animate-foam-pulse"
+            />
+          </svg>
         </div>
 
-        {/* Ambient Oceanic Glows */}
-        <div className="absolute top-20 left-10 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 right-10 w-[450px] h-[450px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 right-1/4 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        {/* Ambient Floating Hand-drawn Stickers */}
-        <div className="absolute top-24 left-[8%] w-12 h-9 opacity-40 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "1s" }}>
-          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain" />
-        </div>
-        <div className="absolute bottom-32 left-[12%] w-11 h-8 opacity-35 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "2.5s" }}>
-          <img src="/stickers/saba-fish.png" alt="Blue Fish" className="w-full h-full object-contain" />
-        </div>
-        <div className="absolute top-1/3 right-[10%] w-12 h-9 opacity-35 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "1.8s" }}>
-          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain" />
-        </div>
-        <div className="absolute bottom-28 right-[14%] w-12 h-8 opacity-40 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "3.2s" }}>
-          <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain" />
+        {/* Secondary Delicate Wave Foam Layer */}
+        <div className="absolute bottom-[30%] sm:bottom-[33%] inset-x-0 h-14 pointer-events-none animate-wave-ebb" style={{ animationDelay: "-3s" }}>
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-full opacity-35">
+            <path
+              d="M0,50 C200,20 400,70 600,35 C800,75 1000,30 1200,55 L1200,120 L0,120 Z"
+              fill="rgba(255, 255, 255, 0.35)"
+            />
+          </svg>
         </div>
 
-        {/* Floating Ambient Bubbles */}
-        {[...Array(14)].map((_, i) => (
+        {/* Ambient Floating Hand-drawn Stickers on Beach Scene */}
+        <div className="absolute top-28 left-[6%] w-14 h-11 opacity-70 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "0.5s" }}>
+          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain drop-shadow-md" />
+        </div>
+        <div className="absolute bottom-28 left-[10%] w-12 h-9 opacity-75 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "2s" }}>
+          <img src="/stickers/saba-fish.png" alt="Blue Fish" className="w-full h-full object-contain drop-shadow-md" />
+        </div>
+        <div className="absolute top-36 right-[8%] w-14 h-11 opacity-65 pointer-events-none animate-float-slow hidden md:block" style={{ animationDelay: "1.5s" }}>
+          <img src="/stickers/saba-boat.png" alt="Origami Boat" className="w-full h-full object-contain drop-shadow-md" />
+        </div>
+        <div className="absolute bottom-24 right-[12%] w-14 h-10 opacity-80 pointer-events-none animate-crab-scuttle hidden md:block">
+          <img src="/stickers/saba-crab.png" alt="Kaniki Crab" className="w-full h-full object-contain drop-shadow-md" />
+        </div>
+
+        {/* Rising Ocean Bubbles */}
+        {[...Array(16)].map((_, i) => (
           <div
             key={i}
-            className="absolute rounded-full bg-cyan-300/20 border border-cyan-200/40 pointer-events-none"
+            className="absolute rounded-full bg-cyan-200/30 border border-cyan-100/50 pointer-events-none backdrop-blur-xs"
             style={{
-              width: `${12 + (i % 5) * 8}px`,
-              height: `${12 + (i % 5) * 8}px`,
-              left: `${(i * 7.5 + 4) % 96}%`,
+              width: `${10 + (i % 5) * 8}px`,
+              height: `${10 + (i % 5) * 8}px`,
+              left: `${(i * 6.5 + 3) % 96}%`,
               bottom: "-40px",
-              animation: `bubbleFloatUp ${8 + (i % 6) * 3}s linear infinite`,
-              animationDelay: `${i * 0.9}s`,
+              animation: `bubbleFloatUp ${7 + (i % 6) * 3}s linear infinite`,
+              animationDelay: `${i * 0.7}s`,
             }}
           />
         ))}
-
-        {/* Subtle Water Caustic Grid */}
-        <div 
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage: "radial-gradient(circle, #38bdf8 1px, transparent 1px)",
-            backgroundSize: "32px 32px",
-          }}
-        />
       </div>
 
       {/* =========================================
@@ -162,41 +171,44 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
           ========================================= */}
       <header className="relative z-20 w-full max-w-6xl mx-auto px-6 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 flex items-center justify-center shadow-lg shadow-cyan-500/30 border border-cyan-300/30 p-1.5 backdrop-blur-md">
+          <div className="w-10 h-10 rounded-xl bg-slate-900/80 backdrop-blur-md flex items-center justify-center shadow-lg shadow-cyan-500/20 border border-cyan-300/30 p-1.5">
             <img src="/stickers/saba-fish.png" alt="Sameko Saba Fish" className="w-full h-full object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-extrabold text-sm tracking-wider uppercase text-cyan-300">
-                Sameko Saba &bull; Lighthouse Mode
+              <span className="font-extrabold text-sm tracking-wider uppercase text-cyan-300 drop-shadow">
+                Sameko Saba &bull; Beach Mode
               </span>
               <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
             </div>
-            <p className="text-xs text-slate-400 font-mono">PORT 3000 &bull; SYSTEM MAINTENANCE</p>
+            <p className="text-xs text-slate-300 font-mono drop-shadow">PORT 3000 &bull; SYSTEM MAINTENANCE</p>
           </div>
         </div>
 
         {/* Live Status Pill */}
-        <div className="hidden sm:flex items-center gap-2 bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-cyan-500/30 shadow-inner text-xs font-mono">
+        <div className="hidden sm:flex items-center gap-2 bg-slate-900/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-cyan-500/30 shadow-inner text-xs font-mono">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
           <span className="text-slate-300">Helipod Host:</span>
-          <span className="text-cyan-300 font-semibold">Tuning Beacon</span>
+          <span className="text-cyan-300 font-semibold">Tuning Beach Station</span>
         </div>
       </header>
 
       {/* =========================================
           MAIN MAINTENANCE STAGE
           ========================================= */}
-      <main className="relative z-20 max-w-4xl mx-auto px-6 py-8 flex flex-col items-center text-center my-auto">
+      <main className="relative z-20 max-w-4xl mx-auto px-6 py-6 flex flex-col items-center text-center my-auto">
         
+        {/* Official Sameko Saba Beach Logo */}
+        <div className="mb-4 animate-float-slow select-none">
+          <img 
+            src="/stickers/saba-logo.png" 
+            alt="Sameko Saba Official Logo" 
+            className="w-44 sm:w-56 h-auto object-contain drop-shadow-[0_10px_25px_rgba(6,182,212,0.4)] mx-auto hover:scale-105 transition-transform duration-300" 
+          />
+        </div>
+
         {/* Saba & Kaniki Interactive Avatar Stage */}
         <div className="relative mb-6">
-          
-          {/* Lighthouse Base Icon (behind character) */}
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 text-7xl opacity-30 select-none filter blur-[1px]">
-            🏮
-          </div>
-
           {/* Character Container with Floating Motion */}
           <div className="relative group cursor-pointer animate-float-slow" onClick={handleCheer}>
             
@@ -425,7 +437,7 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
         </div>
         <div className="flex items-center gap-3 font-mono text-[11px]">
           <span className="inline-flex items-center gap-1.5">
-            Lighthouse Keeper: Sameko Saba
+            Beach Keeper: Sameko Saba
             <img src="/stickers/saba-fish.png" alt="Saba Fish" className="w-4 h-3 object-contain inline-block" />
           </span>
           <span>&bull;</span>

@@ -610,3 +610,67 @@ body {
   animation: finWave 2.4s ease-in-out infinite;
 }
 
+/* ============================================================
+   BEACH ANIMATION EFFECTS (Waves, Water Caustics, Foam Glow)
+   ============================================================ */
+
+@keyframes waveEbbFlow {
+  0%, 100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(-18px) scaleY(1.1);
+  }
+}
+
+@keyframes waveShift {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-24px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes waterGlimmer {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes beachFoamPulse {
+  0%, 100% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 6px rgba(165, 243, 252, 0.5));
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 16px rgba(165, 243, 252, 0.95));
+  }
+}
+
+.animate-wave-ebb {
+  animation: waveEbbFlow 6.5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-wave-shift {
+  animation: waveShift 9s ease-in-out infinite;
+}
+
+.animate-water-glimmer {
+  animation: waterGlimmer 4.5s ease-in-out infinite;
+}
+
+.animate-foam-pulse {
+  animation: beachFoamPulse 3.5s ease-in-out infinite;
+}
+
