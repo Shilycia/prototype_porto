@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shilycia's DEV — Creative Technology & Software Engineering</title>
+  <meta name="description" content="Portal resmi pengembang shilycia's DEV (Bintang Putra Adryan) - Full-Stack Developer & Creative Technologist." />
+  
+  <!-- Favicon / Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset & Base Setup */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      scroll-behavior: smooth;
+      color-scheme: dark;
+    }
+    body {
+      background-color: #05040a;
+      color: #e2e8f0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Ambient Nebulae Background Glows */
+    .bg-glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(120px);
+    }
+    .bg-glow-purple {
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(147, 51, 234, 0.22) 0%, rgba(126, 34, 206, 0.08) 50%, transparent 70%);
+    }
+    .bg-glow-cyan {
+      bottom: 10%;
+      right: -100px;
+      width: 600px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, transparent 70%);
+    }
+    .bg-glow-pink {
+      top: 40%;
+      left: -150px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+    }
+
+    /* Grid Overlay */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Layout Wrapper */
+    .app-wrap {
+      position: relative;
+      z-index: 10;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Navigation Bar */
+    header {
+      position: sticky;
+      top: 1rem;
+      z-index: 100;
+      margin-bottom: 3.5rem;
+      padding-top: 1rem;
+    }
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 1.5rem;
+      background: rgba(14, 10, 24, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #9333ea, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #ffffff;
+      box-shadow: 0 0 15px rgba(147, 51, 234, 0.6);
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+    .nav-links a:hover {
+      color: #e9d5ff;
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1.25rem;
+      background: linear-gradient(135deg, #9333ea, #7e22ce);
+      color: #ffffff !important;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(147, 51, 234, 0.6);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      text-align: center;
+      padding: 2.5rem 0 4rem;
+    }
+    .badge-dev {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 1rem;
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.35);
+      border-radius: 9999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #c084fc;
+      margin-bottom: 1.5rem;
+    }
+    .pulse-online {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.35); }
+    }
+    .hero-title {
+      font-size: 3.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      max-width: 900px;
+      margin: 0 auto 1.5rem;
+      background: linear-gradient(135deg, #ffffff 40%, #e9d5ff 70%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: 1.15rem;
+      color: #94a3b8;
+      max-width: 720px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .btn-main {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.85rem;
+      background: linear-gradient(135deg, #9333ea, #6b21a8);
+      color: #ffffff;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 10px 30px -5px rgba(147, 51, 234, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+    .btn-main:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px -5px rgba(147, 51, 234, 0.7);
+    }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.85rem;
+      background: rgba(255, 255, 255, 0.05);
+      color: #e2e8f0;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      transition: all 0.2s ease;
+    }
+    .btn-ghost:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(168, 85, 247, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Glass Cards Base */
+    .glass-card {
+      background: rgba(16, 12, 26, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 2.25rem;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+    .glass-card:hover {
+      border-color: rgba(168, 85, 247, 0.35);
+    }
+
+    /* Section Titles */
+    .section-wrap {
+      margin-bottom: 5rem;
+    }
+    .section-title-wrap {
+      margin-bottom: 2.25rem;
+      text-align: center;
+    }
+    .section-kicker {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.775rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: #c084fc;
+      margin-bottom: 0.5rem;
+    }
+    .section-heading {
+      font-size: 2.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+
+    /* Developer Profile Box */
+    .dev-profile-card {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 2.5rem;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(24, 16, 42, 0.75) 0%, rgba(12, 10, 20, 0.75) 100%);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+    .dev-profile-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #a855f7, #06b6d4, transparent);
+    }
+    .dev-avatar-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      background: #110e1d;
+    }
+    .dev-avatar-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .dev-name {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+    .dev-role {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #a855f7;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: inline-block;
+    }
+    .dev-bio {
+      color: #94a3b8;
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+    .dev-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-bottom: 1.75rem;
+    }
+    .dev-tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: #cbd5e1;
+    }
+
+    /* Ecosystem Grid */
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .eco-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .eco-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+    }
+    .eco-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(147, 51, 234, 0.15);
+      border: 1px solid rgba(147, 51, 234, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+    .eco-port-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      color: #22d3ee;
+    }
+    .eco-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+    .eco-desc {
+      font-size: 0.925rem;
+      color: #94a3b8;
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
+    }
+    .eco-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.8rem 1.25rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .eco-link-btn:hover {
+      background: rgba(147, 51, 234, 0.18);
+      border-color: rgba(168, 85, 247, 0.4);
+      color: #e9d5ff;
+    }
+
+    /* Tech Stack Matrix */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .tech-card {
+      padding: 1.5rem;
+      border-radius: 18px;
+    }
+    .tech-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a855f7;
+      margin-bottom: 0.75rem;
+    }
+    .tech-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .tech-item {
+      font-size: 0.9rem;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tech-item::before {
+      content: '▹';
+      color: #06b6d4;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 3rem 0;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.875rem;
+    }
+    .footer-brand {
+      color: #ffffff;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .footer-sub {
+      margin-bottom: 1.5rem;
+    }
+    .footer-socials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .footer-socials a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: color 0.2s ease;
+    }
+    .footer-socials a:hover {
+      color: #c084fc;
+    }
+
+    /* Responsive */
+    @media (max-width: 840px) {
+      .hero-title { font-size: 2.35rem; }
+      .dev-profile-card { grid-template-columns: 1fr; }
+      .dev-avatar-wrap { max-width: 240px; margin: 0 auto; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="bg-glow bg-glow-purple"></div>
+  <div class="bg-glow bg-glow-cyan"></div>
+  <div class="bg-glow bg-glow-pink"></div>
+  <div class="bg-grid"></div>
+
+  <div class="app-wrap">
+    
+    <!-- Top Navigation -->
+    <header>
+      <nav class="nav-bar">
+        <a href="#" class="brand">
+          <div class="brand-icon">&gt;_</div>
+          <span>shilycia's DEV</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#about">Tentang Pengembang</a></li>
+          <li><a href="#ecosystem">Ekosistem Sistem</a></li>
+          <li><a href="#stack">Tech Stack</a></li>
+          <li><a href="http://43.173.33.116:3001" target="_blank">Core API</a></li>
+        </ul>
+        <a href="http://43.173.33.116:3000" target="_blank" class="nav-cta">
+          Buka Portofolio &rarr;
+        </a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="badge-dev">
+        <span class="pulse-online"></span>
+        <span>STUDIO PENGEMBANG RESMI &bull; BIZNET GIO CLOUD</span>
+      </div>
+
+      <h1 class="hero-title">
+        Membangun Ekosistem Digital Berkinerja Tinggi & Desain Modern.
+      </h1>
+
+      <p class="hero-desc">
+        Selamat datang di portal resmi <strong>shilycia's DEV</strong>. Pusat arsitektur software, integrasi API cloud terdistribusi, serta aplikasi web dan mobile interaktif yang dipimpin oleh <strong>Bintang Putra Adryan</strong>.
+      </p>
+
+      <div class="hero-actions">
+        <a href="http://43.173.33.116:3000" target="_blank" class="btn-main">
+          🌐 Kunjungi Website Portofolio (:3000)
+        </a>
+        <a href="http://43.173.33.116:3001" target="_blank" class="btn-ghost">
+          ⚡ Portal Status & Core API (:3001)
+        </a>
+      </div>
+    </section>
+
+    <!-- Developer Profile Section -->
+    <section class="section-wrap" id="about">
+      <div class="section-title-wrap">
+        <div class="section-kicker">Profil Kreator & Developer</div>
+        <h2 class="section-heading">Tentang Pengembang</h2>
+      </div>
+
+      <div class="glass-card dev-profile-card">
+        <div class="dev-avatar-wrap">
+          <img 
+            src="http://43.173.33.116:3001/uploads/1789842947228_1000254407.jpg" 
+            alt="Bintang Putra Adryan - shilycia's DEV" 
+            onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600'"
+          />
+        </div>
+        <div class="dev-info">
+          <h3 class="dev-name">Bintang Putra Adryan</h3>
+          <span class="dev-role">@Shilycia &bull; Full-Stack Software Developer & Multimedia Artist</span>
+          
+          <p class="dev-bio">
+            Fokus pada rekayasa perangkat lunak modern, pengembangan REST API yang aman dan terukur, serta pembuatan antarmuka web interaktif yang kaya akan estetika visual dan performa tingkat tinggi.
+          </p>
+
+          <div class="dev-tags">
+            <span class="dev-tag">⚡ Full-Stack Web Development</span>
+            <span class="dev-tag">📱 Android / Hybrid Mobile Apps</span>
+            <span class="dev-tag">☁️ Cloud Infrastructure & VPS</span>
+            <span class="dev-tag">🎥 Cinematography & Visual Editing</span>
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="https://github.com/Shilycia" target="_blank" class="btn-ghost" style="padding: 0.65rem 1.25rem; font-size: 0.85rem;">
+              GitHub: @Shilycia
+            </a>
+            <a href="http://43.173.33.116:3001/profile" target="_blank" class="btn-ghost" style="padding: 0.65rem 1.25rem; font-size: 0.85rem;">
+              Raw API Profile &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ecosystem Section -->
+    <section class="section-wrap" id="ecosystem">
+      <div class="section-title-wrap">
+        <div class="section-kicker">Arsitektur & Layanan Terintegrasi</div>
+        <h2 class="section-heading">Ekosistem Proyek shilycia's DEV</h2>
+      </div>
+
+      <div class="ecosystem-grid">
+        <!-- Card 1: Web Frontend -->
+        <div class="glass-card eco-card">
+          <div>
+            <div class="eco-header">
+              <div class="eco-icon">🌐</div>
+              <span class="eco-port-badge">PORT 3000</span>
+            </div>
+            <h3 class="eco-title">Portfolio Web Frontend</h3>
+            <p class="eco-desc">
+              Aplikasi web portofolio interaktif berbasis Next.js 16 (App Router), React, dan Tailwind CSS dengan efek visual 3D aperture, parallax reveal, dan animasi nebula modern.
+            </p>
+          </div>
+          <a href="http://43.173.33.116:3000" target="_blank" class="eco-link-btn">
+            <span>Buka Website Portofolio</span>
+            <span>&nearr;</span>
+          </a>
+        </div>
+
+        <!-- Card 2: Core API -->
+        <div class="glass-card eco-card">
+          <div>
+            <div class="eco-header">
+              <div class="eco-icon">⚡</div>
+              <span class="eco-port-badge">PORT 3001</span>
+            </div>
+            <h3 class="eco-title">Portfolio Core API Service</h3>
+            <p class="eco-desc">
+              Pusat backend RESTful berbasis NestJS, Prisma ORM, Supabase PostgreSQL, dan integrasi penyimpanan Google Drive API (OAuth 2.0) serta local SSD cloud fallback.
+            </p>
+          </div>
+          <a href="http://43.173.33.116:3001" target="_blank" class="eco-link-btn">
+            <span>Buka API Status Portal</span>
+            <span>&nearr;</span>
+          </a>
+        </div>
+
+        <!-- Card 3: Mobile Suite -->
+        <div class="glass-card eco-card">
+          <div>
+            <div class="eco-header">
+              <div class="eco-icon">📱</div>
+              <span class="eco-port-badge">ANDROID APK</span>
+            </div>
+            <h3 class="eco-title">Admin Mobile Suite</h3>
+            <p class="eco-desc">
+              Aplikasi Android native hybrid menggunakan Ionic Framework, Vue 3, dan Capacitor 8 untuk memanajemen konten karya, sertifikat, dan profil langsung dari ponsel.
+            </p>
+          </div>
+          <a href="http://43.173.33.116:3001/status" target="_blank" class="eco-link-btn">
+            <span>Lihat Spesifikasi API Mobile</span>
+            <span>&nearr;</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack Matrix -->
+    <section class="section-wrap" id="stack">
+      <div class="section-title-wrap">
+        <div class="section-kicker">Teknologi & Tools</div>
+        <h2 class="section-heading">Tech Stack Andal & Skalabel</h2>
+      </div>
+
+      <div class="tech-grid">
+        <div class="glass-card tech-card">
+          <div class="tech-category">Frontend & UI</div>
+          <ul class="tech-list">
+            <li class="tech-item">Next.js 16 (App Router)</li>
+            <li class="tech-item">React & TypeScript</li>
+            <li class="tech-item">Vue 3 & Composition API</li>
+            <li class="tech-item">Tailwind CSS & PostCSS</li>
+            <li class="tech-item">Ionic Framework</li>
+          </ul>
+        </div>
+
+        <div class="glass-card tech-card">
+          <div class="tech-category">Backend & Database</div>
+          <ul class="tech-list">
+            <li class="tech-item">NestJS & Express</li>
+            <li class="tech-item">Prisma ORM</li>
+            <li class="tech-item">Supabase PostgreSQL</li>
+            <li class="tech-item">JWT Authentication</li>
+            <li class="tech-item">Google Drive API v3</li>
+          </ul>
+        </div>
+
+        <div class="glass-card tech-card">
+          <div class="tech-category">Cloud & Infrastructure</div>
+          <ul class="tech-list">
+            <li class="tech-item">Biznet Gio Cloud VPS</li>
+            <li class="tech-item">Ubuntu 24.04 LTS</li>
+            <li class="tech-item">Nginx Web Server</li>
+            <li class="tech-item">PM2 Process Manager</li>
+            <li class="tech-item">Git & CI/CD Workflows</li>
+          </ul>
+        </div>
+
+        <div class="glass-card tech-card">
+          <div class="tech-category">Mobile & Multimedia</div>
+          <ul class="tech-list">
+            <li class="tech-item">Capacitor 8 (Android)</li>
+            <li class="tech-item">Gradle & Android SDK</li>
+            <li class="tech-item">DaVinci Resolve Studio</li>
+            <li class="tech-item">Sony Cinema Profiles</li>
+            <li class="tech-item">Adobe Premiere & Lightroom</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-brand">shilycia's DEV</div>
+      <p class="footer-sub">
+        Creative Technology & Engineering Studio &bull; Bintang Putra Adryan
+      </p>
+
+      <div class="footer-socials">
+        <a href="https://github.com/Shilycia" target="_blank">GitHub</a>
+        <a href="http://43.173.33.116:3000" target="_blank">Portofolio Web</a>
+        <a href="http://43.173.33.116:3001" target="_blank">Core API</a>
+        <a href="http://43.173.33.116:3001/profile" target="_blank">API Profile</a>
+      </div>
+
+      <p>&copy; 2026 shilycia's DEV. All rights reserved. Deployed on Biznet Gio VPS.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
