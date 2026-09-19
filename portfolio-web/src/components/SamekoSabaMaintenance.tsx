@@ -185,89 +185,15 @@ export default function SamekoSabaMaintenance({ onBypass }: SamekoSabaMaintenanc
             {/* Glow Aura */}
             <div className="absolute -inset-3 bg-gradient-to-r from-cyan-500/30 via-sky-400/30 to-pink-500/30 rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-500" />
             
-            {/* Saba Chibi Frame */}
-            <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-full p-1.5 bg-gradient-to-tr from-cyan-400 via-sky-300 to-amber-200 shadow-2xl shadow-cyan-500/40 border-2 border-cyan-200/50 overflow-hidden bg-slate-900">
-              
-              {/* Stylized SVG of Sameko Saba */}
-              <svg viewBox="0 0 200 200" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <linearGradient id="sabaHair" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fef08a" />
-                    <stop offset="60%" stopColor="#fde047" />
-                    <stop offset="90%" stopColor="#38bdf8" />
-                  </linearGradient>
-                  <linearGradient id="sabaEye" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#06b6d4" />
-                    <stop offset="100%" stopColor="#0284c7" />
-                  </linearGradient>
-                  <linearGradient id="sabaCollar" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#1e293b" />
-                    <stop offset="100%" stopColor="#0f172a" />
-                  </linearGradient>
-                </defs>
-
-                {/* Ocean Sky Background in Avatar */}
-                <circle cx="100" cy="100" r="95" fill="#0c1b33" />
-                <circle cx="60" cy="50" r="2" fill="#ffffff" opacity="0.8" />
-                <circle cx="140" cy="40" r="1.5" fill="#ffffff" opacity="0.6" />
-                <circle cx="160" cy="70" r="2.5" fill="#38bdf8" opacity="0.7" />
-
-                {/* Twin-tails Back (Blonde with Cyan streaks) */}
-                <path d="M 40 85 C 20 100 15 150 35 170 C 45 155 45 125 55 105 Z" fill="url(#sabaHair)" />
-                <path d="M 160 85 C 180 100 185 150 165 170 C 155 155 155 125 145 105 Z" fill="url(#sabaHair)" />
-                {/* Cyan Streaks */}
-                <path d="M 28 115 C 22 135 24 155 35 170 C 32 150 32 130 38 110 Z" fill="#38bdf8" opacity="0.9" />
-                <path d="M 172 115 C 178 135 176 155 165 170 C 168 150 168 130 162 110 Z" fill="#38bdf8" opacity="0.9" />
-
-                {/* Shark Fin Ears */}
-                <path d="M 52 70 C 40 60 42 45 58 58 Z" fill="#fde047" stroke="#38bdf8" strokeWidth="2" />
-                <path d="M 148 70 C 160 60 158 45 142 58 Z" fill="#fde047" stroke="#38bdf8" strokeWidth="2" />
-
-                {/* Head / Face */}
-                <ellipse cx="100" cy="102" rx="46" ry="43" fill="#fff1f2" />
-
-                {/* Sailor Collar & Outfit */}
-                <path d="M 68 140 L 132 140 L 140 185 L 60 185 Z" fill="#ffffff" />
-                <path d="M 72 140 L 100 170 L 128 140 L 136 155 L 100 180 L 64 155 Z" fill="url(#sabaCollar)" stroke="#38bdf8" strokeWidth="1.5" />
-                {/* Red Sailor Tie */}
-                <polygon points="96,155 104,155 107,175 100,183 93,175" fill="#f43f5e" />
-
-                {/* Eyes (Aqua blue with sparkle) */}
-                <ellipse cx="80" cy="98" rx="8" ry="11" fill="url(#sabaEye)" />
-                <circle cx="78" cy="94" r="3.2" fill="#ffffff" />
-                <circle cx="82" cy="103" r="1.5" fill="#ffffff" />
-
-                <ellipse cx="120" cy="98" rx="8" ry="11" fill="url(#sabaEye)" />
-                <circle cx="118" cy="94" r="3.2" fill="#ffffff" />
-                <circle cx="122" cy="103" r="1.5" fill="#ffffff" />
-
-                {/* Cute Blushing Cheeks */}
-                <ellipse cx="70" cy="108" rx="7" ry="3.5" fill="#fda4af" opacity="0.75" />
-                <ellipse cx="130" cy="108" rx="7" ry="3.5" fill="#fda4af" opacity="0.75" />
-
-                {/* Cute W-Mouth / Smile */}
-                <path d="M 94 112 Q 97 116 100 113 Q 103 116 106 112" fill="none" stroke="#e11d48" strokeWidth="2" strokeLinecap="round" />
-
-                {/* Front Bangs (Blonde + Cyan edge) */}
-                <path d="M 54 85 C 60 62 80 54 100 54 C 120 54 140 62 146 85 C 135 78 125 80 115 85 C 105 78 95 78 85 85 C 75 80 65 80 54 85 Z" fill="url(#sabaHair)" />
-                {/* Blue Front Streak */}
-                <path d="M 108 55 C 115 65 118 78 116 85 C 112 80 108 72 105 60 Z" fill="#38bdf8" />
-
-                {/* Paper Boat Hairpin */}
-                <polygon points="128,62 144,62 136,53" fill="#ffffff" stroke="#0284c7" strokeWidth="1" />
-                <polygon points="125,62 147,62 141,68 131,68" fill="#e0f2fe" stroke="#0284c7" strokeWidth="1" />
-
-                {/* Steaming Coffee Cup In Front */}
-                <g transform="translate(86, 150)">
-                  <rect x="0" y="8" width="28" height="22" rx="4" fill="#0284c7" stroke="#ffffff" strokeWidth="1.5" />
-                  <path d="M 28 13 C 33 13 33 22 28 22" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" />
-                  {/* Crab logo on cup */}
-                  <circle cx="14" cy="19" r="4" fill="#ef4444" />
-                  {/* Steam */}
-                  <path d="M 8 3 Q 6 -2 10 -6" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" className="animate-steam" />
-                  <path d="M 20 2 Q 22 -3 18 -7" fill="none" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" className="animate-steam" />
-                </g>
-              </svg>
+            {/* Saba Animated GIF Frame */}
+            <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full p-2 bg-gradient-to-tr from-cyan-400 via-sky-300 to-amber-200 shadow-2xl shadow-cyan-500/50 border-2 border-cyan-200/60 overflow-hidden bg-slate-950 flex items-center justify-center">
+              <picture className="w-full h-full flex items-center justify-center">
+                <img
+                  src="/saba-maintenance.gif"
+                  alt="Sameko Saba Maintenance"
+                  className="w-full h-full object-cover rounded-full select-none pointer-events-none"
+                />
+              </picture>
             </div>
 
             {/* Click to Cheer Hint Badge */}
