@@ -5,7 +5,13 @@ const config: CapacitorConfig = {
   appName: 'portoapp',
   webDir: 'dist',
   server: {
+    androidScheme: 'http',
     cleartext: true
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: true
+    }
   }
 };
 
