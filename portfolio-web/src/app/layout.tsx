@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import MouseEffect from "../components/MouseEffect";
 import KafkaPuppet from "../components/KafkaPuppet";
+import MaintenanceGuard from "../components/MaintenanceGuard";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -29,13 +30,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-full flex flex-col bg-black text-white">
-        {/* Interactive Mouse Torch & Fluid Cursor */}
-        <MouseEffect />
-        <Navbar />
-        <main className="flex-grow">{children}</main>
-        {/* Interactive Kafka Puppet Widget */}
-        <KafkaPuppet />
-        <Footer />
+        <MaintenanceGuard>
+          {/* Interactive Mouse Torch & Fluid Cursor */}
+          <MouseEffect />
+          <Navbar />
+          <main className="flex-grow">{children}</main>
+          {/* Interactive Kafka Puppet Widget */}
+          <KafkaPuppet />
+          <Footer />
+        </MaintenanceGuard>
       </body>
     </html>
   );

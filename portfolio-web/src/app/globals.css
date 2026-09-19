@@ -521,3 +521,92 @@ body {
   }
 }
 
+/* ============================================================
+   SAMEKO SABA THEME ANIMATIONS (Lighthouse, Kaniki Crab, Marine)
+   ============================================================ */
+
+@keyframes lighthouseBeam {
+  0% {
+    transform: rotate(-35deg) scaleX(0.85);
+    opacity: 0.35;
+  }
+  50% {
+    transform: rotate(35deg) scaleX(1.15);
+    opacity: 0.75;
+  }
+  100% {
+    transform: rotate(-35deg) scaleX(0.85);
+    opacity: 0.35;
+  }
+}
+
+@keyframes bubbleFloatUp {
+  0% {
+    transform: translateY(100%) translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-120vh) translateX(25px) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes crabScuttle {
+  0%, 100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  25% {
+    transform: rotate(-6deg) translateY(-3px) translateX(-2px);
+  }
+  75% {
+    transform: rotate(6deg) translateY(-3px) translateX(2px);
+  }
+}
+
+@keyframes steamRise {
+  0% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-8px) scaleX(1.3);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-16px) scaleX(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes finWave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+.animate-lighthouse-beam {
+  animation: lighthouseBeam 7s ease-in-out infinite;
+  transform-origin: 50% 0%;
+}
+
+.animate-crab-scuttle {
+  animation: crabScuttle 0.8s ease-in-out infinite;
+}
+
+.animate-steam {
+  animation: steamRise 2s ease-in-out infinite;
+}
+
+.animate-fin-wave {
+  animation: finWave 2.4s ease-in-out infinite;
+}
+
