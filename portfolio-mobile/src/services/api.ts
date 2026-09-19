@@ -1,10 +1,28 @@
 // API Client & Storage Services for Admin Mobile App
+import { Capacitor } from '@capacitor/core';
 
-const DEFAULT_API_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:3001';
+const getFallbackApiUrl = (): string => {
+  const envUrl = (import.meta as any).env?.VITE_API_URL;
+  if (envUrl) return envUrl;
+  if (Capacitor.getPlatform() === 'android') {
+    return 'http://10.0.2.2:3001';
+  }
+  return 'http://localhost:3001';
+};
+
+const DEFAULT_API_URL = getFallbackApiUrl();
 
 export function getApiBaseUrl(): string {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('porto_api_url') || DEFAULT_API_URL;
+    const saved = localStorage.getItem('porto_api_url');
+    if (saved) {
+      // Auto-migrate localhost on Android if it was saved by default
+      if (Capacitor.getPlatform() === 'android' && (saved === 'http://localhost:3001' || saved === 'http://127.0.0.1:3001')) {
+        return 'http://10.0.2.2:3001';
+      }
+      return saved;
+    }
+    return DEFAULT_API_URL;
   }
   return DEFAULT_API_URL;
 }
@@ -55,7 +73,9 @@ async function request<T>(
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const url = `${baseUrl}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  const cleanBase = baseUrl.trim().replace(/\/+$/, '');
+  const cleanPath = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${cleanBase}${cleanPath}`;
 
   try {
     const response = await fetch(url, {

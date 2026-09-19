@@ -70,12 +70,23 @@
           </div>
 
           <!-- API URL Indicator -->
-          <div class="api-status-box">
+          <div class="api-status-box" @click="openApiConfigAlert" style="cursor: pointer;" title="Klik untuk mengubah URL API">
             <span class="api-dot" />
-            <span class="api-text">API: {{ apiUrl }}</span>
+            <span class="api-text">API: {{ apiUrl }} ✏️</span>
           </div>
         </div>
       </div>
+
+      <!-- Change API URL Alert -->
+      <ion-alert
+        :is-open="isApiAlertOpen"
+        header="Konfigurasi URL API"
+        sub-header="Masukkan alamat backend server"
+        message="Untuk Android Emulator gunakan: http://10.0.2.2:3001. Untuk HP fisik gunakan IP Wi-Fi laptop atau URL Cloud (HTTPS)."
+        :inputs="alertInputs"
+        :buttons="alertButtons"
+        @didDismiss="handleAlertDismiss"
+      />
 
       <!-- Toast Alert -->
       <ion-toast
@@ -101,6 +112,7 @@ import {
   IonIcon,
   IonSpinner,
   IonToast,
+  IonAlert,
 } from '@ionic/vue';
 import {
   shieldCheckmarkOutline,
@@ -109,7 +121,7 @@ import {
   logInOutline,
   flashOutline,
 } from 'ionicons/icons';
-import { authService, getApiBaseUrl } from '@/services/api';
+import { authService, getApiBaseUrl, setApiBaseUrl } from '@/services/api';
 
 const router = useRouter();
 
@@ -117,6 +129,45 @@ const username = ref('admin');
 const password = ref('adminpassword123');
 const loading = ref(false);
 const apiUrl = ref('');
+
+const isApiAlertOpen = ref(false);
+const alertInputs = ref<any[]>([]);
+const alertButtons = [
+  {
+    text: 'Batal',
+    role: 'cancel',
+  },
+  {
+    text: 'Simpan',
+    role: 'confirm',
+  },
+];
+
+const openApiConfigAlert = () => {
+  alertInputs.value = [
+    {
+      name: 'url',
+      type: 'text',
+      placeholder: 'http://10.0.2.2:3001',
+      value: apiUrl.value,
+    },
+  ];
+  isApiAlertOpen.value = true;
+};
+
+const handleAlertDismiss = (ev: CustomEvent) => {
+  isApiAlertOpen.value = false;
+  if (ev.detail.role === 'confirm' && ev.detail.data?.values?.url) {
+    const newUrl = ev.detail.data.values.url.trim();
+    if (newUrl) {
+      setApiBaseUrl(newUrl);
+      apiUrl.value = getApiBaseUrl();
+      toastColor.value = 'success';
+      toastMessage.value = `URL API berhasil diubah: ${apiUrl.value}`;
+      showToast.value = true;
+    }
+  }
+};
 
 const showToast = ref(false);
 const toastMessage = ref('');
