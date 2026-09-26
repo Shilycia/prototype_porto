@@ -5,24 +5,14 @@ import SectionDivider from '../../components/SectionDivider';
 import Icon from '../../components/Icon';
 import Nebula from '../../components/Nebula';
 import { resolveMediaUrl } from '../../lib/media';
+import { getPublicCollection } from '../../lib/api';
 
-async function getWorks() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://43.173.33.116:3001'}/works`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
+type Work = { id: number; nama_karya: string; deskripsi: string; kategori?: string | null; media_urls?: string[]; tanggal_pembuatan?: string | null };
 
 const CATEGORIES = ['All Works', 'Photography', 'Cinematography', 'Design', 'Editorial', 'Motion Graphics', 'Architecture'];
 
 export default async function WorksPage() {
-  const works = await getWorks();
+  const works = await getPublicCollection<Work>('/works');
 
   return (
     <div className="min-h-screen bg-black text-white" style={{ fontFamily: 'var(--font-outfit), Outfit, sans-serif' }}>
@@ -98,7 +88,7 @@ export default async function WorksPage() {
           </ScrollReveal>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {works.map((work: any, i: number) => (
+            {works.map((work, i) => (
               <ScrollReveal key={work.id} delay={i * 70} direction="up">
                 <ParallaxCard className="rounded-2xl h-full">
                   <div className="glass-card rounded-2xl overflow-hidden group block h-full">

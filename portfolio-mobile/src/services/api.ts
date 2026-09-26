@@ -108,6 +108,9 @@ async function request<T>(
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      if (response.status === 401) {
+        removeAuthToken();
+      }
       throw new Error(
         errorData.message || `Request failed with status ${response.status}`
       );
@@ -354,4 +357,3 @@ export const uploadService = {
     });
   },
 };
-

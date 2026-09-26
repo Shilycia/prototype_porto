@@ -124,7 +124,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="text-base font-black text-white leading-tight">Diyul<span className="text-purple-400">.</span></span>
-              <span className="text-[9px] font-mono font-semibold text-purple-400 uppercase tracking-wider">shilycia's DEV</span>
+              <span className="text-[9px] font-mono font-semibold text-purple-400 uppercase tracking-wider">shilycia&apos;s DEV</span>
             </div>
           </div>
           
@@ -184,7 +184,7 @@ export default function Navbar() {
             <Icon name="arrow_forward" size={16} />
           </Link>
           <p className="text-center text-[11px] text-gray-500 font-mono">
-            shilycia's DEV &bull; Portfolio Experience
+            shilycia&apos;s DEV &bull; Portfolio Experience
           </p>
         </div>
       </aside>

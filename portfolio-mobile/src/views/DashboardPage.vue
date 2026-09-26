@@ -187,7 +187,6 @@ import {
   IonPage,
   IonHeader,
   IonToolbar,
-  IonTitle,
   IonContent,
   IonButtons,
   IonButton,
@@ -527,20 +526,6 @@ onMounted(() => {
 .item-arrow {
   color: #64748b;
   font-size: 18px;
-}
-
-.loading-state,
-.empty-state {
-  text-align: center;
-  padding: 30px 16px;
-  color: #94a3b8;
-  font-size: 13px;
-}
-
-.empty-icon {
-  font-size: 38px;
-  color: #64748b;
-  margin-bottom: 8px;
 }
 
 .line-clamp-1 {

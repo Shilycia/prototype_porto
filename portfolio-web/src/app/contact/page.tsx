@@ -4,19 +4,9 @@ import SectionDivider from '../../components/SectionDivider';
 import CyberAperture from '../../components/CyberAperture';
 import Icon from '../../components/Icon';
 import Nebula from '../../components/Nebula';
+import { getPublicCollection } from '../../lib/api';
 
-async function getContact() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/contact`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
+type Contact = { email?: string | null; nomor_telepon?: string | null; instagram?: string | null; linkedin?: string | null; basis_lokasi?: string | null };
 
 const CONTACT_LINKS = [
   {
@@ -78,7 +68,7 @@ const PROCESS_STEPS = [
 ];
 
 export default async function ContactPage() {
-  const contacts = await getContact();
+  const contacts = await getPublicCollection<Contact>('/contact');
   const contact = contacts.length > 0 ? contacts[0] : null;
 
   return (
@@ -102,7 +92,7 @@ export default async function ContactPage() {
 
           <ScrollReveal delay={150} direction="up">
             <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-6">
-              Let's create something <span className="text-shimmer">together.</span>
+              Let&apos;s create something <span className="text-shimmer">together.</span>
             </h1>
           </ScrollReveal>
 

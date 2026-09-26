@@ -184,7 +184,7 @@ export default function HeroSection() {
         {/* Sub-headline */}
         <ScrollReveal delay={350} direction="up">
           <p className="text-lg sm:text-xl text-gray-300 font-light max-w-2xl mb-10 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-            I'm <span className="text-white font-semibold">Diyul</span> — a creative professional crafting compelling photography, video production, and digital design.
+            I&apos;m <span className="text-white font-semibold">Diyul</span> — a creative professional crafting compelling photography, video production, and digital design.
           </p>
         </ScrollReveal>
       </div>

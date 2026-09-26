@@ -43,7 +43,7 @@ export class WorksService {
 
   async create(createDto: CreateWorkDto) {
     const res = await this.prisma.work.create({
-      data: createDto as any,
+      data: createDto,
     });
     return this.normalizeWork(res);
   }
@@ -85,7 +85,7 @@ export class WorksService {
 
     const res = await this.prisma.work.update({
       where: { id },
-      data: updateDto as any,
+      data: updateDto,
     });
     return this.normalizeWork(res);
   }

@@ -9,12 +9,14 @@ export class ExperienceService {
 
   async create(createDto: CreateExperienceDto) {
     return this.prisma.experience.create({
-      data: createDto as any,
+      data: createDto,
     });
   }
 
   async findAll() {
-    return this.prisma.experience.findMany();
+    return this.prisma.experience.findMany({
+      orderBy: { created_at: 'desc' },
+    });
   }
 
   async findOne(id: number) {
@@ -24,7 +26,7 @@ export class ExperienceService {
   async update(id: number, updateDto: UpdateExperienceDto) {
     return this.prisma.experience.update({
       where: { id },
-      data: updateDto as any,
+      data: updateDto,
     });
   }
 

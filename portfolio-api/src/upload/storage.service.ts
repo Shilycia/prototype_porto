@@ -183,6 +183,10 @@ export class StorageService {
     // Local file deletion
     if (fileId.startsWith('local:')) {
       const filename = fileId.replace('local:', '');
+      if (path.basename(filename) !== filename) {
+        this.logger.warn('Rejected unsafe local file deletion request.');
+        return false;
+      }
       const filePath = path.join(this.uploadDir, filename);
       if (fs.existsSync(filePath)) {
         try {

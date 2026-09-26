@@ -5,32 +5,10 @@ import SectionDivider from '../../components/SectionDivider';
 import Icon from '../../components/Icon';
 import Nebula from '../../components/Nebula';
 import { resolveMediaUrl } from '../../lib/media';
+import { getPublicCollection } from '../../lib/api';
 
-async function getProfile() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://43.173.33.116:3001'}/profile`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
-
-async function getExperiences() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/experience`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
+type Profile = { foto_profile?: string | null };
+type Experience = { id: number; nama_pengalaman: string; deskripsi: string; tanggal_mulai: string; tanggal_selesai?: string | null };
 
 const SKILL_DOMAINS = [
   {
@@ -56,8 +34,10 @@ const SKILL_DOMAINS = [
 ];
 
 export default async function AboutPage() {
-  const profiles = await getProfile();
-  const experiences = await getExperiences();
+  const [profiles, experiences] = await Promise.all([
+    getPublicCollection<Profile>('/profile'),
+    getPublicCollection<Experience>('/experience'),
+  ]);
   const profile = profiles.length > 0 ? profiles[0] : null;
   const resolvedPhoto = resolveMediaUrl(profile?.foto_profile);
   const profilePhoto = resolvedPhoto && !resolvedPhoto.includes('unsplash')
@@ -236,7 +216,7 @@ export default async function AboutPage() {
               <div className="absolute left-5 top-0 bottom-0 w-[2px] bg-gradient-to-b from-purple-600 via-fuchsia-600 to-transparent hidden md:block" />
 
               <div className="space-y-10">
-                {experiences.map((exp: any, i: number) => (
+                {experiences.map((exp, i) => (
                   <ScrollReveal key={exp.id} delay={i * 90} direction="up">
                     <div className="relative md:pl-16">
                       {/* Glowing Nodal Point */}

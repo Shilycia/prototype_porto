@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard.js';
 import { CertificatesService } from './certificates.service.js';
 import { CreateCertificateDto } from './dto/create-certificate.dto.js';
 import { UpdateCertificateDto } from './dto/update-certificate.dto.js';
@@ -8,6 +9,7 @@ export class CertificatesController {
   constructor(private readonly service: CertificatesService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   create(@Body() createDto: CreateCertificateDto) {
     return this.service.create(createDto);
   }
@@ -23,11 +25,13 @@ export class CertificatesController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateCertificateDto) {
     return this.service.update(id, updateDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.service.remove(id);
   }

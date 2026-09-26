@@ -15,7 +15,7 @@ export class CertificatesService {
 
   async create(createDto: CreateCertificateDto) {
     return this.prisma.certificate.create({
-      data: createDto as any,
+      data: createDto,
     });
   }
 
@@ -44,7 +44,7 @@ export class CertificatesService {
 
     return this.prisma.certificate.update({
       where: { id },
-      data: updateDto as any,
+      data: updateDto,
     });
   }
 

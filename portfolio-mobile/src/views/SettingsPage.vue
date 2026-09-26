@@ -541,40 +541,6 @@ onMounted(() => {
   gap: 14px;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #cbd5e1;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.custom-input-item {
-  --background: rgba(8, 6, 13, 0.8);
-  --border-radius: 12px;
-  border: 1px solid rgba(168, 85, 247, 0.25);
-  border-radius: 12px;
-}
-
-.textarea-item {
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-
-.save-btn {
-  --background: linear-gradient(135deg, #9333ea, #d946ef);
-  --border-radius: 12px;
-  font-weight: 700;
-  height: 44px;
-  margin-top: 6px;
-}
-
 .hint-text {
   font-size: 11px;
   color: #94a3b8;

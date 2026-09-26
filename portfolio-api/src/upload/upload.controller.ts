@@ -7,7 +7,9 @@ import {
   UploadedFile,
   BadRequestException,
   Req,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard.js';
 import type { Request } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { StorageService, UploadResult } from './storage.service.js';
@@ -17,6 +19,7 @@ export class UploadController {
   constructor(private readonly storageService: StorageService) {}
 
   @Post()
+  @UseGuards(AuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {
@@ -31,6 +34,9 @@ export class UploadController {
     if (!file) {
       throw new BadRequestException('File tidak ditemukan dalam request.');
     }
+    if (!['image/', 'video/', 'application/pdf'].some((type) => file.mimetype?.startsWith(type))) {
+      throw new BadRequestException('Hanya gambar, video, dan dokumen PDF yang dapat diunggah.');
+    }
 
     const host = req?.get?.('host');
     const protocol = req?.protocol || 'http';
@@ -40,6 +46,7 @@ export class UploadController {
   }
 
   @Delete(':fileId')
+  @UseGuards(AuthGuard)
   async deleteFile(@Param('fileId') fileId: string) {
     const success = await this.storageService.deleteFile(fileId);
     return {

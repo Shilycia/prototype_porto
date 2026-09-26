@@ -821,39 +821,10 @@ ion-segment-button {
   --box-shadow: 0 0 20px rgba(147, 51, 234, 0.5);
 }
 
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-bottom: 20px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #cbd5e1;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
 .field-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.upload-btn {
-  --color: #38bdf8;
-  --border-color: rgba(56, 189, 248, 0.4);
-  font-size: 11px;
-  font-weight: 700;
-  --border-radius: 8px;
 }
 
 .toggle-row {
@@ -863,44 +834,4 @@ ion-segment-button {
   padding: 6px 0;
 }
 
-.modal-input-item {
-  --background: rgba(18, 13, 36, 0.9);
-  --border-radius: 12px;
-  border: 1px solid rgba(168, 85, 247, 0.3);
-  border-radius: 12px;
-}
-
-.textarea-item {
-  padding-top: 6px;
-  padding-bottom: 6px;
-}
-
-.modal-submit-btn {
-  --background: linear-gradient(135deg, #9333ea, #d946ef);
-  --border-radius: 12px;
-  font-weight: 800;
-  height: 48px;
-  margin-top: 10px;
-}
-
-.loading-state,
-.empty-state {
-  text-align: center;
-  padding: 50px 20px;
-  color: #94a3b8;
-}
-
-.empty-icon {
-  font-size: 48px;
-  color: #64748b;
-  margin-bottom: 12px;
-}
-
-.add-btn-small {
-  --background: rgba(147, 51, 234, 0.3);
-  --color: #c084fc;
-  --border-radius: 8px;
-  font-weight: 700;
-  margin-top: 12px;
-}
 </style>

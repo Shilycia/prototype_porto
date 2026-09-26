@@ -31,7 +31,7 @@ export class ProfileService {
 
   async create(createProfileDto: CreateProfileDto) {
     const res = await this.prisma.profile.create({
-      data: createProfileDto as any,
+      data: createProfileDto,
     });
     return this.normalizeProfile(res);
   }
@@ -69,7 +69,7 @@ export class ProfileService {
 
     const res = await this.prisma.profile.update({
       where: { id },
-      data: updateProfileDto as any,
+      data: updateProfileDto,
     });
     return this.normalizeProfile(res);
   }

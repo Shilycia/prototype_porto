@@ -8,22 +8,12 @@ import SectionDivider from '../components/SectionDivider';
 import Icon from '../components/Icon';
 import Nebula from '../components/Nebula';
 import { resolveMediaUrl } from '../lib/media';
+import { getPublicCollection } from '../lib/api';
 
-async function getWorks() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || 'http://43.173.33.116:3001'}/works`,
-      { cache: 'no-store' }
-    );
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
-    return [];
-  }
-}
+type Work = { id: number; nama_karya: string; deskripsi: string; kategori?: string | null; media_urls?: string[] };
 
 export default async function Home() {
-  const works = await getWorks();
+  const works = await getPublicCollection<Work>('/works');
 
   return (
     <div className="flex flex-col bg-black text-white overflow-hidden" style={{ fontFamily: 'var(--font-outfit), Outfit, sans-serif' }}>
@@ -231,7 +221,7 @@ export default async function Home() {
             </ScrollReveal>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {works.slice(0, 6).map((work: any, i: number) => (
+              {works.slice(0, 6).map((work, i) => (
                 <ScrollReveal key={work.id} delay={i * 80} direction="up">
                   <ParallaxCard className="rounded-2xl">
                     <div className="glass-card rounded-2xl overflow-hidden group h-full">
@@ -296,7 +286,7 @@ export default async function Home() {
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <ScrollReveal delay={100} direction="up">
             <h2 className="text-4xl sm:text-6xl font-black tracking-tight mb-6 leading-tight">
-              Let's create something{' '}
+              Let&apos;s create something{' '}
               <span className="text-shimmer">extraordinary</span>
             </h2>
           </ScrollReveal>

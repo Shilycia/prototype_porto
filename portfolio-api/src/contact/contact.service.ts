@@ -9,7 +9,7 @@ export class ContactService {
 
   async create(createDto: CreateContactDto) {
     return this.prisma.contact.create({
-      data: createDto as any,
+      data: createDto,
     });
   }
 
@@ -24,7 +24,7 @@ export class ContactService {
   async update(id: number, updateDto: UpdateContactDto) {
     return this.prisma.contact.update({
       where: { id },
-      data: updateDto as any,
+      data: updateDto,
     });
   }
 

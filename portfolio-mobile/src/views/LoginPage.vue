@@ -241,16 +241,6 @@ const handleLogin = async () => {
   line-height: 1.5;
 }
 
-.custom-input-item {
-  --background: rgba(8, 6, 13, 0.75);
-  --border-radius: 14px;
-  --padding-start: 14px;
-  border: 1px solid rgba(168, 85, 247, 0.22);
-  border-radius: 14px;
-  margin-bottom: 14px;
-  transition: all 0.2s ease;
-}
-
 .custom-input-item:focus-within {
   border-color: #c084fc;
   box-shadow: 0 0 20px rgba(192, 132, 252, 0.25);
